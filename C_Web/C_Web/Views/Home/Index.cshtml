@@ -1,0 +1,44 @@
+﻿@{
+    Layout = null;
+}
+<head>
+
+</head>
+<body style="height:1000px; background-color:#b9b9b9">
+    <div class="bg-secondary">
+        @* <div class="card-body">
+            <div class="card-title">C_Web</div>
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+            @using (Html.BeginForm("Logins", "Home", FormMethod.Post, new { @class = "login_content" }))
+            {
+                @Html.AntiForgeryToken()
+                <div class="input-block">
+                    <div>
+                        <span class="field-validation-valid text-danger"></span>
+                        <input type="text" placeholder="Enter Account" id="Account" data-val-required="Enter Account!" name="Account" />
+                        <label for="inputAccount" class="label">Account</label>
+                    </div>
+                    <div>
+                        <span class="field-validation-valid text-danger"></span>
+                        <input type="text" placeholder="Enter Password" id="Password" data-val-required="Enter Password!" name="Password" />
+                        <label for="inputAccount" class="label">Password</label>
+                    </div>
+                </div>
+                <div>
+                    @if (TempData["Message"] != null)
+                    {
+                        <h5 style="color:red;">@Html.Raw(TempData["Message"])</h5>
+                    }
+                    <button class="btn btn-lg btn-info" type="submit">
+                        <font style="font:bold">Login</font>
+                    </button>
+                </div>
+            }
+        </div> *@
+    </div>
+</body>
+
+<script>
+
+</script>

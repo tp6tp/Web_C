@@ -1,0 +1,18 @@
+﻿.system_name {
+    /*定位對齊*/
+    position: relative;
+    /*margin: auto;*/
+    top:150px;
+    left:38%;
+    text-align: center;
+}
+
+.loginBox {
+    background-color: white;
+    border-top-style: solid;
+    top: 155px;
+}
+
+.loginBtn {
+    background: #ebbc83;
+}

@@ -1,0 +1,151 @@
+﻿@using C_Web.Extension;
+<html lang="en">
+    <head>
+        <style>
+            .side-menu{     
+                position: relative;
+                height: 100vh;
+                /* width: 15%; */
+                background-color: #727272;
+                transform: translateX(-100%);
+                transition: 0.5s; 
+            }
+            .side-menu ul{
+                list-style-type: none;
+                padding: 0 0 0 3%;
+                margin: 0;
+                font-size: medium;  
+            }
+            .side-menu a{
+                display:block;
+                width: 100%;
+            }
+            .side-menu a:hover, .side-menu a .active{
+                background: #ECEAE9;
+            }
+            
+
+
+            .side-menu > .menu-title {
+                width: 100%;
+                height: 50px;
+                text-align:center;
+                font-weight: bold;
+                font-size: 40px;
+            }
+
+            .side-menu > .mainmenu {
+                margin-top: 15%;
+                height:auto;
+                width: 100%;
+            }
+            .side-menu > .menu-foot{
+                margin-top: 50%;
+                height:auto;
+                width:100%;
+            }
+
+            .function-list ul{
+                display:none;
+            }
+            .function-list li{
+                display:block;
+                margin-top:5%;
+            }
+            .function-list a{
+                font-size:large;
+                text-align:left;       
+                text-decoration: none;
+                font-weight: bold;
+                color: inherit;
+            }
+            .child{
+                margin-left: 7%;
+            }
+            .function-list > li > a{
+                letter-spacing: 4px;
+            }
+
+            #menuONOFF{
+                position:absolute;
+                opacity: 0;
+                z-index: -3;
+            }
+            label{
+                width: 15px; 
+                height: 80px;
+                background-color:#d1d1d1;
+                color:#686666;
+                right: -15px;
+                top: 0;
+                bottom: 0;
+                margin: auto;
+                line-height: 80px;
+                text-align: center;
+                box-shadow: 5px 0 5px rgba(23, 23, 54, 0.6);
+                position: absolute;
+            }
+            #menuONOFF:checked + .side-menu{
+                transform: translateX(0);
+            }
+        </style>
+    </head>
+    <body>
+        <input type="checkbox"  id="menuONOFF"/>
+
+        <div class="side-menu">
+            <div class="menu-title">
+                Home
+            </div>
+
+            <div id="mainmenu" class="mainmenu">
+            </div>       
+            
+            <ul class="menu-foot function-list">  
+                <li>
+                <a href="@Url.Action("Index", "SYSList", new{area="WebCAdmin"})"><i class="bi bi-gear-fill">功能管理</i></a>
+                </li>
+            </ul>
+            
+            <label for="menuONOFF">
+                <i id="left" class="bi bi-caret-left-fill" hidden></i>
+                <i id="right" class="bi bi-caret-right-fill" ></i>
+            </label>
+        </div>
+    </body>
+</html>
+
+<script>
+
+    $(document).ready(function () { 
+        $.ajax({
+            url: "@Url.Action("ViewMainMenu","Home", new{area="WebCAdmin"})",
+            type: "GET",
+            success: function (result) {
+                $("#mainmenu").html(result);
+            }
+        })
+    })
+        // $(".function-list > li > a").click(function (event) {
+        //     console.log($(this).siblings("ul").length);
+        //     if ($(this).siblings("ul").length > 0) {
+        //         event.preventDefault();
+        //         $(this).toggleClass("active");
+        //         $(this).siblings("ul").slideToggle("fast");
+        //     }
+        // });
+    // })
+
+    $("#menuONOFF").on("change", function(){
+        if($(this).is(":checked")){
+            $("#left").removeAttr("hidden");
+            $("#right").prop("hidden", "hidden");
+        }
+        else{
+            $("#right").removeAttr("hidden");
+            $("#left").prop("hidden", "hidden");
+        }
+    })
+ 
+</script>
+

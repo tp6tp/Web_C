@@ -1,0 +1,251 @@
+﻿@using C_Web.Extension
+
+<div class="row">
+    <div class="col-md-12 col-sm-12 col-xs-12">
+        <div class="x_panel">
+            <div class="x_title">
+                <ul class="nav">
+                    <li>
+                        <button class="btn btn-primary" id="createmodal">新 增</button>
+                        <button id="back" class="btn btn-dark">返 回</button>
+                    </li>
+                </ul>
+            </div>
+            <hr />
+            <h2>
+                <font style="font-size:20px; color:#475A70;">@ViewBag.FAname</font>
+                <input id="syslistID" style="display:none" value="@ViewBag.SYSListId" readonly hidden />
+            </h2>
+            <div class="row">
+                <div class="col-md-12 col-sm-12 col-xs-12">
+                    <table class="table-bordered table-hover dt-center table nowrap syslistTable con10" id="syslistTable">
+                        <thead>
+                            <tr style="text-align: center;">
+                                <th nowrap data-priority="1"><a class="btn btn-info btn-sm" role="button" id="OrderUpdate" style="color: white">更新排序</a></th>
+                                <th nowrap data-priority="3">啟用狀態</th>
+                                <th nowrap data-priority="4">功能名稱</th>
+                                <th nowrap data-priority="5">更新人員</th>
+                                <th nowrap data-priority="6">更新時間</th>
+                                <th nowrap data-priority="2"></th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--Create Modal-->
+    <div class="modal fade" id="CreateSYSList" role="dialog" data-backdrop="static" data-keyboard="false">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+
+            </div>
+        </div>
+    </div>
+    <!--Edit Modal-->
+    <div class="modal fade" id="EditSYSList" role="dialog" data-backdrop="static" data-keyboard="false">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(function () {
+        datatablemenu("#syslistTable", { SYSListId: $("#syslistID").val() });
+    });
+
+    //#region y軸拖曳效果
+    $(document).ready(function () {
+        var fixHelper = function (e, ui) {
+            ui.children().each(function () {
+                $(this).width($(this).width());
+            });
+            return ui;
+        };
+        $(function () {
+            $("tbody").sortable({
+                helper: fixHelper,
+                axis: "y"
+            }).disableSelection();
+            $('tbody td').not('.dtr-control').mousedown(function (event) {
+                event.stopImmediatePropagation();
+            });
+        });
+    });
+    //#endregion
+
+    //#region datatable
+    function datatablemenu() { 
+        $("#syslistTable").DataTable({
+            "processing": true,
+            "bServerSide": true,
+            "destroy": true,
+            "order": [[0, "asc"]],
+            "pageLength": "10",
+            "lengthMenu": [[10, 20, 30, 40, -1], [10, 20, 30, 40, "All"]],
+            "paging": false,
+            "searching": false,
+            "bJQueryUI": true,
+            "autoWidth": true,
+            "ajax": {
+                "url": "@Url.Action("ViewSYSListTable","SYSList")",
+                "type": "POST",
+                "data": { SYSListId: $("#syslistID").val() },
+            },
+            "columns": [
+                { 
+                    "targets": 0, "data": null, "name": "Orders", "render": function (source) {
+                        let html = "";
+                        html += `<i class="bi bi-arrows-move" data-value=`+ source.orderint+`></i>`;
+                        return html;
+                    }
+                },
+                {
+                    "targets": 2, "data": null, "name": "OnOff", "render": function (source) {
+                        let html = "";
+                        if (source.booldata) {
+                            html += `<input value="`+source.pkId+`" class="Onoff" id="onoff" type="checkbox" checked/>`;
+                        } else {
+                            html += `<input value="` + source.pkId + `" class="Onoff" id="onoff" type="checkbox" />`;
+                        }
+                        html += `<input id="childid" style="display:none;" value="` + source.pkId + `" data_order="` + source.orderint + `"/>`;
+                        return html;
+                    }
+                },
+                { "targets": 3, "data": "text1", "name": "Name" },
+                { "targets": 4, "data": "text4", "name": "MUser" },
+                { "targets": 5, "data": "text5", "name": "MTime" },
+                {
+                    "targets": 1, "data": null, "orderable": false, "render": function (source) {
+                        let html = "";
+                        // html += `<a class="btn btn-success btnDetail mr-2" role="button" style="color: white" href="/WebCAdmin/SYSList/EditSYSListModal?Id=` + source.pkId + `">編 輯</a>`;
+                        html += `<button class="btn btn-success btnedit mr-2" role="button" style="color: white" value="` + source.pkId + `">編 輯</button>`;
+                        html += `<a class="btn btn-primary mr-2" role="button" style="color: white" href="/WebCAdmin/SYSList/Index?SYSListId=` + source.pkId + `">子項目</a>`
+                        return html;
+                    },
+                },
+            ],
+            "drawCallback": function () {
+                $("[id=onoff]").bootstrapToggle({
+                    on: "啟用",
+                    off: "停用",
+                    onstyle: "info",
+                    width: 100,
+                });
+                $(".btnedit").on("click", function () {
+                    $("#EditSYSList .modal-content").load("@Url.Action("EditSYSListModal", "SYSList")", { Id: $(this).val() });
+                    $("#EditSYSList").modal("show");
+                });
+                $(".Onoff").on("change", function () {
+                    var id = $(this).val();
+                    var checked = $(this).is(":checked");
+                    OnOff(id, checked);
+                });
+            },
+            responsive: true
+        });
+    };
+    //#endregion
+
+    //#region 排序更新
+    $("#OrderUpdate").on("click", function () { 
+        var targets = $("input[id=childid]");
+        var strings = [], strings2 = [];
+        var i = 1;
+        $.map(targets, function (d) {
+            strings.push(parseInt(d.value));
+            strings2.push(parseInt(i));
+            i++;
+            if (strings.length == targets.length) {
+                fetch("@Url.Action("ViewOrder", "SYSList")", {
+                    method: "POST",
+                    body: JSON.stringify({
+                        data: strings,
+                        order: strings2,
+                    }),
+                    headers: new Headers({
+                        "Content-Type": "application/json",
+                    }),
+                })
+                .then((res) => {
+                    console.log(res);
+                    return res.json();
+                }).then((resjson) => {
+                    if (resjson.success) {
+                        $("#CreateSYSList").modal("hide");
+                        datatablemenu("#syslistTable", {});
+                        Swal.fire({
+                            icon: "success",
+                            title: "成功",
+                            text: "排序完成",
+                            showCloseButton: true,
+                            backdrop: true,
+                        });
+                    }
+                    else {
+                        Swal.fire({
+                            icon: "error",
+                            title: "失敗",
+                            text: "排序錯誤",
+                            showCloseButton: true,
+                            backdrop: true,
+                        })
+                    }
+                })
+            }
+        });
+    })
+    //#endregion
+
+    //#region 狀態開關
+    function OnOff(id, bool) {
+        fetch("@Url.Action("EditOnOff", "SYSList")", {
+            method: "POST",
+            body: JSON.stringify({
+                PKId: id,
+                OnOff: bool,
+            }),
+            headers: new Headers({
+                "Content-Type": "application/json",
+            }),
+        })
+        .then((res) => {
+            console.log(res);
+            return res.json();
+        }).then((resjson) => {
+            if (resjson.success) {
+                $("#CreateSYSList").modal("hide");
+                datatablemenu("#syslistTable", {});
+                Swal.fire({
+                    icon: "success",
+                    title: "成功",
+                    text: "狀態變更完成",
+                    showCloseButton: true,
+                    backdrop: true,
+                });
+            }
+            else {
+                Swal.fire({
+                    icon: "error",
+                    title: "失敗",
+                    text: "狀態變更錯誤",
+                    showCloseButton: true,
+                    backdrop: true,
+                })
+            }
+        })
+    }
+    //#endregion
+
+    $("#back").on('click', function () {
+        window.history.back();
+    });
+
+    $("#createmodal").on("click", function () { 
+        $("#CreateSYSList .modal-content").load("@Url.Action("CreateSYSListModal", "SYSList")", { SYSListId: $("#syslistID").val() });
+        $("#CreateSYSList").modal("show");
+    })
+</script>

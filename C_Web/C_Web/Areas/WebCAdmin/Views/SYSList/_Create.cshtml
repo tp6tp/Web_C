@@ -1,0 +1,85 @@
+﻿@model C_Web.Entity.SYS.SYS_List
+
+<div class="modal-header">
+    <h2 class="modal-title">
+        新增子系統
+    </h2>
+    <button type="button" class="close" data-dismiss="modal">&times;</button>
+</div>
+<div class="modal-body">
+    @* @Html.HiddenFor(x => x.FAID, new{ value=ViewBag.SYSListId }) *@
+    <input id="FAID" name="FAID" value="@ViewBag.SYSListId" type="hidden" />
+    <div class="form-group">
+        <input name="Name" id="Name" placeholder="輸入功能名稱" class="form-control" />
+        <span id="errorname" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <input name="Url" id="Url" placeholder="輸入導向網址" class="form-control" />
+        <span id="errorurl" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <input name="Icon" id="Icon" placeholder="輸入圖示" class="form-control" />
+    </div>
+</div>
+
+<div class="modal-footer">
+    <button type="button" id="createsyslist" class="btn btn-primary btn-sm">新增</button>
+</div>
+
+
+<script>
+    //#region create
+    $("#createsyslist").on("click", function () {
+        if ($("#Name").val() == "" || $("#Url").val() == ""){
+            if ($("#Name").val() == "") 
+                $("#errorname").html("請輸入功能名稱");
+            else
+                $("#errorname").html("");
+            if ($("#Url").val() == "") 
+                $("#errorurl").html("請輸入導向網址");
+            else
+                $("#errorurl").html("");
+            return false
+        }
+        else {
+            fetch("@Url.Action("CreateSYSList", "SYSList")", {
+                method: "POST",
+                body: JSON.stringify({
+                    Name: $("#Name").val(),
+                    Url: $("#Url").val(),
+                    Icon: $("#Icon").val(),
+                    FAID: $("#FAID").val(),
+                }),
+                headers: new Headers({
+                    "Content-Type": "application/json",
+                }),
+            })
+            .then((res) => {
+                return res.json();
+            }).then((resjson) => {
+                if (resjson.success) {
+                    $("#CreateSYSList").modal("hide");
+                    datatablemenu("#syslistTable", {});
+                    Swal.fire({
+                        icon: "success",
+                        title: "成功",
+                        text: "新增完成",
+                        showCloseButton: true,
+                        backdrop: true,
+                    });
+                }
+                else {
+                    Swal.fire({
+                        icon: "error",
+                        title: "失敗",
+                        text: "新增錯誤",
+                        showCloseButton: true,
+                        backdrop: true,
+                    })
+                }
+            })
+        }
+    })
+    //#endregion
+
+</script>

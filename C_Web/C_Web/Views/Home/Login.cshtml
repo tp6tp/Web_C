@@ -1,0 +1,52 @@
+﻿@{
+    Layout = null;
+}
+@model C_WebDTO.sysDTO.LoginDTO
+<head>
+    <script src="~/source/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/source/jquery-ui-1.13.2.custom/jquery-ui.min.js"></script>
+    <script src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.9/jquery.validate.min.js"></script>
+    <script src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.9/additional-methods.min.js"></script>
+    <script src="~/source/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+    <script src="~/source/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <link href="~/source/bootstrap-4.6.2-dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/source/css/site.css" rel="stylesheet" />
+    <link href="~/source/css/loginboxstyle.css" rel="stylesheet" />
+</head>
+
+<body>
+    <div class="col-3 system_name">
+        <h2>TEST</h2>
+    </div>
+    <form method="post" action="@Url.Action("Logins", "Home")" role="form">
+        @Html.AntiForgeryToken()
+        <div>
+            <div class="col-3 system_name loginBox">
+                <div>
+                    <h3>登入Login</h3>
+
+                    @Html.TextBoxFor(x => x.Account , new{@class="form-control", placeholde="帳號", })
+                    @Html.ValidationMessageFor(x => x.Account, "", new{@class="text-danger"})
+                    <div class="table"></div>
+
+                    @Html.TextBoxFor(x => x.Password , new{@class="form-control", placeholde="密碼"})
+                    @Html.ValidationMessageFor(x => x.Password, "", new{@class="text-danger"})
+                    <div class="table"></div>
+
+                    <div style="text-align:center; margin: auto;">
+                        <span class="text-danger">@TempData["Message"]</span>
+                        <button type="submit" class="text-nowrap loginBtn btn-lg form-control"> 登 入</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+    @* <input id="longinResult" type="text" value="" style="display:none" /> *@
+</body>
+
+<script>
+    // $(function () { 
+    //     if (!$("#longinResult").val() == "")
+    //         $("#loginMes").html() = $("#longinResult").val();
+    // })
+</script>
