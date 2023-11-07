@@ -1,0 +1,543 @@
+﻿<style>
+    q::before {
+        content: "/";
+    }
+    .form-group {
+        font-weight: bold;
+    }
+    legend {
+        font-weight: bold;
+    }
+    hr {
+        border: 1px solid;
+    }
+    #cusTab {
+        width: 100%;
+    }
+    #cusTab > ul {
+        margin: 0;
+        list-style: none;
+    }
+    #cusTab1 {
+        position: relative;
+    }
+    #cusTab2 {
+        position: relative;
+    }
+    .tab-title {
+        list-style: none;
+    }
+    #cusTab > ul > li {
+        display: inline-flex;
+        font-size: 14px;
+        border-radius: 5px;
+        margin: 2px 0 -12px 2px;
+        height: 45px;
+        width: 150px;
+        line-height: 24px;
+        background-color: lightgray;
+        padding: 0 0 0 2.5%;
+        list-style: none;
+    }
+    #cusTab > ul > li a {
+        color: #2a6b9c;
+        font-size: medium;
+        font-weight: bold;
+        text-decoration: none;
+    }
+    #cusTab > ul > li.active {
+        background: #ffffff;
+        border: 3px solid #2a6b9c;
+    }
+    #cusTab > .tab-inner {
+        clear: left;
+        color: #000;
+        background: #ffffff;
+    }
+    .tab-inner {
+        border-top: 3px solid #2a6b9c;
+    }
+</style>
+
+<div id="cusTab" class="row">
+    <ul class="tab-title">
+        <li><a href="#cusTab1">產　業</a></li>
+        <li><a href="#cusTab2">屬　性</a></li>
+    </ul>
+    <div class="col-md-12 col-sm-12 col-xs-12">
+        <div class="panel-heading">
+            <div id="cusTab1" class="tab-inner" style="background-color:white;">
+                @Html.AntiForgeryToken()
+                @Html.ValidationSummary(true)
+                <fieldset>
+                    <legend>產業基礎檔</legend>
+                    <div class="form-group col-md-4">
+                        產業名稱：
+                        <input class="form-control" id="industrialName" maxlength="7" />
+                    </div>
+                    <div>
+                        &ensp;
+                        <input type="button" id="createindustrial" class="btn btn-success form-control" value="新 增" />
+                    </div>
+                    <div>
+                        &ensp;
+                        <a type="button" class="btn btn-dark form-control" href="/CustomerInfo/CustomerBasic">返 回</a>
+                    </div>
+                </fieldset>
+                <div class="row" style="margin-top:20px">
+                    <div class="col-md-12 col-sm-12 col-xs-12">
+                        <table class="table table-hover dt-responsive nowrap industrialtable con10" id="industrialtable">
+                            <thead>
+                                <tr style="text-align:left;">
+                                    <th nowrap data-priority="1">產業名稱</th>
+                                    <th nowrap data-priority="3">新增人員</th>
+                                    <th nowrap data-priority="4">新增時間</th>
+                                    <th nowrap data-priority="5">修改人員</th>
+                                    <th nowrap data-priority="6">修改時間</th>
+                                    <th nowrap data-priority="2"></th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+
+            <div id="cusTab2" class="tab-inner" style="background-color:white;">
+                @Html.AntiForgeryToken()
+                @Html.ValidationSummary(true)
+                <fieldset>
+                    <legend>屬性基礎檔</legend>
+                    <div class="form-group col-md-4">
+                        屬性名稱：
+                        <input class="form-control" id="attributeName" maxlength="5" />
+                    </div>
+                    <div>
+                        &ensp;
+                        <input type="button" id="createattribute" class="btn btn-success form-control" value="新 增" />
+                    </div>
+                    <div>
+                        &ensp;
+                        <a type="button" class="btn btn-dark form-control" href="/CustomerInfo/CustomerBasic">返 回</a>
+                    </div>
+                </fieldset>
+                <div class="row" style="margin-top:20px">
+                    <div class="col-md-12 col-sm-12 col-xs-12">
+                        <table class="table table-hover dt-responsive nowrap attributetable con10" id="attributetable">
+                            <thead>
+                                <tr style="text-align:left;">
+                                    <th nowrap data-priority="1">屬性名稱</th>
+                                    <th nowrap data-priority="3">新增人員</th>
+                                    <th nowrap data-priority="4">新增時間</th>
+                                    <th nowrap data-priority="5">修改人員</th>
+                                    <th nowrap data-priority="6">修改時間</th>
+                                    <th nowrap data-priority="2"></th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+</div>
+
+<script>
+    //#region 頁籤操作
+    $(function () {
+        var $li = $('ul.tab-title li');
+        $($li.eq(0).addClass('active').find('a').attr('href')).siblings('.tab-inner').hide();
+
+        $li.click(function () {
+            $($(this).find('a').attr('href')).show().siblings('.tab-inner').hide();
+            $(this).addClass('active').siblings('.active').removeClass('active');
+        });
+    });
+    //#endregion
+    $(function () {
+        datatableINDUS("#industrialtable", {});
+        datatableATTRI("#attributetable", {});
+    });
+    //#region datatableINDUS
+    function datatableINDUS() {
+        $("#industrialtable").DataTable({
+            "processing": true,
+            "bServerSide": true,
+            "destroy": true,
+            "order": [[0, "asc"]],
+            "pageLength": "10",
+            "lengthMenu": [[10, 20, 30, 40, -1], [10, 20, 30, 40, "All"]],
+            "paging": false,
+            "searching": false,
+            "bJQueryUI": true,
+            "autoWidth": true,
+            "ajax": {
+                "url": "@Url.Action("ViewIndustrialBasicTable", "CustomerBasic")",
+                "type": "POST",
+                "data": {},
+            },
+            "columns": [
+                { "targets": 0, "data": "text1", "name": "Name" },
+                { "targets": 1, "data": "text3", "name": "CUser" },
+                { "targets": 2, "data": "text4", "name": "CTime" },
+                { "targets": 3, "data": "text5", "name": "MUser" },
+                { "targets": 4, "data": "text6", "name": "MUser" },
+                {
+                    "targets": 5, "data": null, "orderable": false,
+                    "render": function (source, type, row, meta) {
+                        let html = "";
+                        html += `<a class="btn btn-danger btnDetail mr-2" role="button" style="color: white" id="delindus_` + source.text2 + `" >刪 除<span class="glyphicon glyphicon-trash"></span></a>`;
+                        return html;
+                    }
+                }
+            ],
+            "drawCallback": function () {
+                var indus_ = document.querySelectorAll("button[id^='indus_']");
+                var delindus = document.querySelectorAll("a[id^='delindus_']");
+                indus_.forEach(function (tar) {
+                    tar.addEventListener("click", function () {
+                        editindus(tar.id.split("_")[1], tar.textContent);
+                    });
+                })
+                delindus.forEach(function (tar) {
+                    tar.addEventListener("click", function () {
+                        deleteindus(tar.id.split("_")[1]);
+                    })
+                })
+            },
+            responsive: true
+        })
+    }
+    //#endregion
+    //#region createINDUS
+    document.getElementById("createindustrial").addEventListener("click", function () {
+        var name = document.getElementById("industrialName").value;
+        if (name == "" || name == null) {
+            Swal.fire({
+                icon: "error",
+                title: "錯誤",
+                text: "名稱欄位不得為空",
+                showCloseButton: true,
+                backdrop: true,
+            });
+        } 
+        else {
+            fetch("@Url.Action("CreateIndustrialBasic", "CustomerBasic")", {
+                method: "POST",
+                body: JSON.stringify({
+                    industrialName: name,
+                 }),
+                headers: new Headers({
+                    "Content-Type": "application/json",
+                }),
+            })
+            .then((res) => {
+                return res.json();
+            }).then((resjson) => {
+                if (resjson.success) {
+                    $("#industrialName").val("");
+                    datatableINDUS("#industrialtable", {});
+                    Swal.fire({
+                        icon: "success",
+                        title: "成功",
+                        text: "產業新增完成",
+                        showCloseButton: true,
+                        backdrop: true,
+                    });
+                }
+                else {
+                    Swal.fire({
+                        icon: "error",
+                        title: "失敗",
+                        text: "產業新增錯誤",
+                        showCloseButton: true,
+                        backdrop: true,
+                    })
+                }
+            })
+        }
+    });
+    //#endregion 
+    //#region editINDUS
+    function editindus(id, oldname) {
+        var newname = prompt("請輸入欲修改名稱", oldname);
+        if (newname != null) {
+            fetch("@Url.Action("EditIndustrialBasic", "CustomerBasic")", {
+                method: "POST",
+                body: JSON.stringify({
+                    industrialName: newname,
+                    ID: parseInt(id),
+                }),
+                headers: new Headers({
+                    "Content-Type": "application/json",
+                }),
+            })
+            .then((res) => {
+                return res.json();
+            }).then((resjson) => {
+                if (resjson.success) {
+                    $("#industrialName").val("");
+                    datatableINDUS("#industrialtable", {});
+                    Swal.fire({
+                        icon: "success",
+                        title: "成功",
+                        text: "產業修改完成",
+                        showCloseButton: true,
+                        backdrop: true,
+                    });
+                }
+                else {
+                    Swal.fire({
+                        icon: "error",
+                        title: "失敗",
+                        text: "產業修改錯誤",
+                        showCloseButton: true,
+                        backdrop: true,
+                    })
+                }
+            })
+        }
+    }
+    //#endregion
+    //#region deleteINDUS
+    function deleteindus(id) {
+        var bool = confirm("是否確定刪除此筆資料？");
+        if (bool) {
+            fetch("@Url.Action("DeleteIndustrialBasic", "CustomerBasic")", {
+                method: "POST",
+                body: JSON.stringify({
+                    ID: parseInt(id),
+                }),
+                headers: new Headers({
+                    "Content-Type": "application/json",
+                }),
+            })
+            .then((res) => {
+                return res.json();
+            }).then((resjson) => {
+                if (resjson.success) {
+                    $("#industrialName").val("");
+                    datatableINDUS("#industrialtable", {});
+                    Swal.fire({
+                        icon: "success",
+                        title: "成功",
+                        text: "刪除完成",
+                        showCloseButton: true,
+                        backdrop: true,
+                    });
+                }
+                else {
+                    Swal.fire({
+                        icon: "error",
+                        title: "失敗",
+                        text: "刪除錯誤",
+                        showCloseButton: true,
+                        backdrop: true,
+                    })
+                }
+            })
+        }
+    }
+    //#endregion
+
+    //#region datatableATTRI
+    function datatableATTRI() {
+        $("#attributetable").DataTable({
+            "processing": true,
+            "bServerSide": true,
+            "destroy": true,
+            "order": [[0, "asc"]],
+            "pageLength": "10",
+            "lengthMenu": [[10, 20, 30, 40, -1], [10, 20, 30, 40, "All"]],
+            "paging": false,
+            "searching": false,
+            "bJQueryUI": true,
+            "autoWidth": false,
+            "ajax": {
+                "url": "@Url.Action("ViewAttributeBasicTable", "CustomerBasic")",
+                "type": "POST",
+                "data": {},
+            },
+            "columns": [
+                { "targets": 0, "data": "text1", "name": "Name" },
+                { "targets": 1, "data": "text3", "name": "CUser" },
+                { "targets": 2, "data": "text4", "name": "CTime" },
+                { "targets": 3, "data": "text5", "name": "MUser" },
+                { "targets": 4, "data": "text6", "name": "MUser" },
+                {
+                    "targets": 5, "data": null, "orderable": false,
+                    "render": function (source, type, row, meta) {
+                        let html = "";
+                        html += `<a class="btn btn-danger btnDetail mr-2" role="button" style="color: white" id="delattri_` + source.text2 + `" >刪 除<span class="glyphicon glyphicon-trash"></span></a>`;
+                        return html;
+                    }
+                }
+            ],
+            "drawCallback": function () {
+                var attri_ = document.querySelectorAll("button[id^='attri_']");
+                var delattri = document.querySelectorAll("a[id^='delattri_']");
+                attri_.forEach(function (tar) {
+                    tar.addEventListener("click", function () {
+                        editattri(tar.id.split("_")[1], tar.textContent);
+                    });
+                })
+                delattri.forEach(function (tar) {
+                    tar.addEventListener("click", function () {
+                        deleteattri(tar.id.split("_")[1]);
+                    })
+                })
+            },
+            responsive: true
+        })
+    }
+    //#endregion
+    //#region createATTRI
+    document.getElementById("createattribute").addEventListener("click", function () {
+        var attriname = document.getElementById("attributeName").value;
+        if (attriname == "" || attriname == null) {
+            Swal.fire({
+                icon: "error",
+                title: "錯誤",
+                text: "名稱欄位不得為空",
+                showCloseButton: true,
+                backdrop: true,
+            });
+        }
+        else {
+            fetch("@Url.Action("CreateAttributeBasic", "CustomerBasic")", {
+                method: "POST",
+                body: JSON.stringify({
+                    attributeName: attriname,
+                }),
+                headers: new Headers({
+                    "Content-Type": "application/json",
+                }),
+            })
+            .then((res) => {
+                return res.json();
+            }).then((resjson) => {
+                if (resjson.success) {
+                    $("#attributeName").val("");
+                    datatableATTRI("#attributetable", {});
+                    Swal.fire({
+                        icon: "success",
+                        title: "成功",
+                        text: "屬性新增完成",
+                        showCloseButton: true,
+                        backdrop: true,
+                    });
+                }
+                else {
+                    Swal.fire({
+                        icon: "error",
+                        title: "失敗",
+                        text: "屬性新增錯誤",
+                        showCloseButton: true,
+                        backdrop: true,
+                    })
+                }
+            })
+            // $.post("@Url.Action("CreateAttributeBasic", "CustomerBasic")", { attributeName: attriname },
+            //     function (e) {
+            //         document.getElementById("attributeName").value = "";
+            //         if (e.success) {
+            //             pnotifyapi("新增成功", 'success');
+            //             datatableATTRI("#attributetable", {});
+            //         }
+            //         else
+            //             pnotifyapi("新增失敗", 'error');
+                    
+            //     })
+        }
+    })
+    //#endregion
+    //#region editATTRI
+    function editattri(id, oldname) {
+        var newname = prompt("請輸入欲修改名稱", oldname);
+        if (newname != null) {
+            fetch("@Url.Action("EditAttributeBasic", "CustomerBasic")", {
+                method: "POST",
+                body: JSON.stringify({
+                    attributeName: newname,
+                    ID: parseInt(id),
+                }),
+                headers: new Headers({
+                    "Content-Type": "application/json",
+                }),
+            })
+            .then((res) => {
+                return res.json();
+            }).then((resjson) => {
+                if (resjson.success) {
+                    datatableATTRI("#attributetable", {});
+                    Swal.fire({
+                        icon: "success",
+                        title: "成功",
+                        text: "屬性修改完成",
+                        showCloseButton: true,
+                        backdrop: true,
+                    });
+                }
+                else {
+                    Swal.fire({
+                        icon: "error",
+                        title: "失敗",
+                        text: "屬性修改錯誤",
+                        showCloseButton: true,
+                        backdrop: true,
+                    })
+                }
+            })
+        }
+    }
+    //#endregion
+    //#region deleteATTRI
+    function deleteattri(id) {
+        var bool = confirm("是否確定刪除此屬性資料？");
+        if (bool) {
+            fetch("@Url.Action("DeleteAttributeBasic", "CustomerBasic")", {
+                method: "POST",
+                body: JSON.stringify({
+                    ID: parseInt(id),
+                }),
+                headers: new Headers({
+                    "Content-Type": "application/json",
+                }),
+            })
+            .then((res) => {
+                return res.json();
+            }).then((resjson) => {
+                if (resjson.success) {
+                    datatableATTRI("#attributetable", {});
+                    Swal.fire({
+                        icon: "success",
+                        title: "成功",
+                        text: "刪除完成",
+                        showCloseButton: true,
+                        backdrop: true,
+                    });
+                }
+                else {
+                    Swal.fire({
+                        icon: "error",
+                        title: "失敗",
+                        text: "刪除錯誤",
+                        showCloseButton: true,
+                        backdrop: true,
+                    })
+                }
+            })
+            // $.post("@Url.Action("DeleteAttributeBasic", "CustomerBasic")", { ID: id }, function (e) {
+            //     if (e.success) {
+            //         pnotifyapi("刪除成功", 'success');
+            //         datatableATTRI("#attributetable", {});
+            //     }
+            //     else
+            //         pnotifyapi("刪除失敗", 'error');
+            // })
+        }
+    }
+    //#endregion
+</script>

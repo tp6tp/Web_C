@@ -10,6 +10,7 @@ namespace C_WebDTO.CommonDTO
 {
     public class FetchDTO
     {
+        #region for SYSList
         public object[] data { get; set; }
         public object[] order { get; set; }
         public string PKId { get; set; }
@@ -26,5 +27,14 @@ namespace C_WebDTO.CommonDTO
         public int Orders { get; set; }
         public long MUser { get; set; }
         public string MTime { get; set; }
+        #endregion
+
+        #region for Customer
+        public string STime { get; set; }
+        public string ETime { get; set; }
+        public string Company { get; set; }
+        public string Unicode { get; set; }
+        public string Type { get; set; }
+        #endregion
     }
 }

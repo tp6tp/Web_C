@@ -15,6 +15,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Web_SYSList_Services;
 using Web_License_Services;
+using Web_Customer_Services;
 
 namespace C_Web
 {
@@ -39,7 +40,8 @@ namespace C_Web
             services.AddTransient<DataContext>(); //new2
             services.TryAddScoped<IGenericRepository<dynamic>, GenericRepository<dynamic>>(); //new2
             services.TryAddScoped<ISYSList_Services, SYSList_Services>(); //new2
-            services.TryAddScoped<ILicense_Services, License_Services>();
+            services.TryAddScoped<ILicense_Services, License_Services>(); //new2
+            services.TryAddScoped<ICustomer_Services, Customer_Services>();
         }
 
         //public void ReadDBConnString()

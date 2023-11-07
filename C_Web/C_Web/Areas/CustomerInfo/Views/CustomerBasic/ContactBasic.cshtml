@@ -1,0 +1,522 @@
+﻿<style>
+    q::before {
+        content: "/";
+    }
+    .form-group {
+        font-weight: bold;
+    }
+    legend {
+        font-weight: bold;
+    }
+    hr {
+        border: 1px solid;
+    }
+    #conTab {
+        width: 100%;
+    }
+    #conTab > ul {
+        margin: 0;
+        list-style: none;
+    }
+    #conTab1 {
+        position: relative;
+    }
+    #conTab2 {
+        position: relative;
+    }
+    .tab-title {
+        list-style: none;
+    }
+    #conTab > ul > li {
+        display: inline-flex;
+        font-size: 14px;
+        border-radius: 5px;
+        margin: 2px 0 -12px 2px;
+        height: 45px;
+        width: 150px;
+        line-height: 24px;
+        background-color: lightgray;
+        padding: 0 0 0 2.5%;
+        list-style: none;
+    }
+    #conTab > ul > li a {
+        color: #2a6b9c;
+        font-size: medium;
+        font-weight: bold;
+        text-decoration: none;
+    }
+    #conTab > ul > li.active {
+        background: #ffffff;
+        border: 3px solid #2a6b9c;
+    }
+    #conTab > .tab-inner {
+        clear: left;
+        color: #000;
+        background: #ffffff;
+    }
+    .tab-inner {
+        border-top: 3px solid #2a6b9c;
+    }
+</style>
+
+<div id="conTab" class="row">
+    <ul class="tab-title">
+        <li><a href="#conTab1">聯絡人類型</a></li>
+        <li><a href="#conTab2">區　域</a></li>
+    </ul>
+    <div class="col-md-12 col-sm-12 col-xs-12">
+        <div class="panel-heading">
+
+            <div id="conTab1" class="tab-inner" style="background-color:white;">
+                @Html.AntiForgeryToken()
+                @Html.ValidationSummary(true)
+                <fieldset>
+                    <legend>類型基礎檔</legend>
+                    <div class="form-group col-md-4">
+                        類型名稱：
+                        <input class="form-control" id="contactType" maxlength="6" />
+                    </div>
+                    <div>
+                        &ensp;
+                        <input type="button" id="createcontype" class="btn btn-success form-control" value="新 增" />
+                    </div>
+                    <div>
+                        &ensp;
+                        <a type="button" class="btn btn-dark form-control" href="/CustomerInfo/CustomerBasic">返 回</a>
+                    </div>
+                </fieldset>
+                <div class="row" style="margin-top:20px">
+                    <div class="col-md-12 col-sm-12 col-xs-12">
+                        <table class="table table-hover dt-responsive nowrap contypetable con10" id="contypetable">
+                            <thead>
+                                <tr style="text-align:left;">
+                                    <th nowrap data-priority="1">類型名稱</th>
+                                    <th nowrap data-priority="3">新增人員</th>
+                                    <th nowrap data-priority="4">新增時間</th>
+                                    <th nowrap data-priority="5">修改人員</th>
+                                    <th nowrap data-priority="6">修改時間</th>
+                                    <th nowrap data-priority="2"></th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div id="conTab2" class="tab-inner" style="background-color:white;">
+                @Html.AntiForgeryToken()
+                @Html.ValidationSummary(true)
+                <fieldset>
+                    <legend>區域基礎檔</legend>
+                    <div class="form-group col-md-4">
+                        區域名稱：
+                        <input class="form-control" id="contactArea" maxlength="10" />
+                    </div>
+                    <div>
+                        &ensp;
+                        <input type="button" id="createarea" class="btn btn-success form-control" value="新 增" />
+                    </div>
+                    <div>
+                        &ensp;
+                        <a type="button" class="btn btn-dark form-control" href="/CustomerInfo/CustomerBasic">返 回</a>
+                    </div>
+                </fieldset>
+                <div class="row" style="margin-top:20px">
+                    <div class="col-md-12 col-sm-12 col-xs-12">
+                        <table class="table table-hover dt-responsive nowrap conareatable con10" id="conareatable">
+                            <thead>
+                                <tr style="text-align:left;">
+                                    <th nowrap data-priority="1">區域名稱</th>
+                                    <th nowrap data-priority="3">新增人員</th>
+                                    <th nowrap data-priority="4">新增時間</th>
+                                    <th nowrap data-priority="5">修改人員</th>
+                                    <th nowrap data-priority="6">修改時間</th>
+                                    <th nowrap data-priority="2"></th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+</div>
+
+<script>
+    //#region 頁籤操作
+    $(function () {
+        var $li = $('ul.tab-title li');
+        $($li.eq(0).addClass('active').find('a').attr('href')).siblings('.tab-inner').hide();
+
+        $li.click(function () {
+            $($(this).find('a').attr('href')).show().siblings('.tab-inner').hide();
+            $(this).addClass('active').siblings('.active').removeClass('active');
+        });
+    });
+    //#endregion
+    $(function () {
+        datatableConType("#contypetable", {});
+        datatableConArea("#conareatable", {});
+    });
+    //#region contypedatatable
+    function datatableConType() {
+        $("#contypetable").DataTable({
+            "processing": true,
+            "bServerSide": true,
+            "destroy": true,
+            "order": [[0, "asc"]],
+            "pageLength": "10",
+            "lengthMenu": [[10, 20, 30, 40, -1], [10, 20, 30, 40, "All"]],
+            "paging": false,
+            "searching": false,
+            "bJQueryUI": true,
+            "autoWidth": true,
+            "ajax": {
+                "url": "@Url.Action("ViewContactTypeBasicTable", "CustomerBasic")",
+                "type": "POST",
+                "data": {},
+            },
+            "columns": [
+                { "targets": 0, "data": "text1", "name": "Name" },
+                { "targets": 1, "data": "text3", "name": "CUser" },
+                { "targets": 2, "data": "text4", "name": "CTime" },
+                { "targets": 3, "data": "text5", "name": "MUser" },
+                { "targets": 4, "data": "text6", "name": "MTime" },
+                {
+                    "targets": 5, "data": null, "orderable": false,
+                    "render": function (source, type, row, meta) {
+                        let html = "";
+                        html += `<a class="btn btn-danger btnDetail mr-2" role="button" style="color: white" id="delcontype_` + source.text2 + `" >刪 除<span class="glyphicon glyphicon-trash"></span></a>`;
+                        return html;
+                    }
+                }
+            ],
+            "drawCallback": function () {
+                var contype_ = document.querySelectorAll("button[id^='contype_']");
+                var delcontype = document.querySelectorAll("a[id^='delcontype_']");
+                contype_.forEach(function (tar) {
+                    tar.addEventListener("click", function () {
+                        editcontype(tar.id.split("_")[1], tar.textContent);
+                    });
+                })
+                delcontype.forEach(function (tar) {
+                    tar.addEventListener("click", function () {
+                        deletecontype(tar.id.split("_")[1]);
+                    })
+                })
+            },
+            responsive: true
+        })
+    }
+    //#endregion
+    //#region createConType
+    document.getElementById("createcontype").addEventListener("click", function () {
+        var contype = document.getElementById("contactType").value;
+        if (contype == "" || contype == null) {
+            Swal.fire({
+                icon: "error",
+                title: "錯誤",
+                text: "名稱欄位不得為空",
+                showCloseButton: true,
+                backdrop: true,
+            });
+        }      
+        else {
+            fetch("@Url.Action("CreateContactTypeBasic", "CustomerBasic")", {
+                method: "POST",
+                body: JSON.stringify({
+                    ContactType: contype,
+                }),
+                headers: new Headers({
+                    "Content-Type": "application/json",
+                }),
+            })
+            .then((res) => {
+                return res.json();
+            }).then((resjson) => {
+                if (resjson.success) {
+                    $("#contactType").val("");
+                    datatableConType("#contypetable", {});
+                    Swal.fire({
+                        icon: "success",
+                        title: "成功",
+                        text: "聯絡人類型新增完成",
+                        showCloseButton: true,
+                        backdrop: true,
+                    });
+                }
+                else {
+                    Swal.fire({
+                        icon: "error",
+                        title: "失敗",
+                            text: "聯絡人類型新增錯誤",
+                        showCloseButton: true,
+                        backdrop: true,
+                    })
+                }
+            })
+        }
+    })
+    //#endregion
+    //#region editConType
+    function editcontype(id, oldname) {
+        var newtype = prompt("請輸入欲修改名稱", oldname);
+        if (newtype != null) {
+            fetch("@Url.Action("EditContactTypeBasic", "CustomerBasic")", {
+                method: "POST",
+                body: JSON.stringify({
+                    ContactType: newtype,
+                    ID: parseInt(id),
+                }),
+                headers: new Headers({
+                    "Content-Type": "application/json",
+                }),
+            })
+            .then((res) => {
+                return res.json();
+            }).then((resjson) => {
+                if (resjson.success) {
+                    datatableConType("#contypetable", {});
+                    Swal.fire({
+                        icon: "success",
+                        title: "成功",
+                        text: "聯絡人類型修改完成",
+                        showCloseButton: true,
+                        backdrop: true,
+                    });
+                }
+                else {
+                    Swal.fire({
+                        icon: "error",
+                        title: "失敗",
+                            text: "聯絡人類型修改錯誤",
+                        showCloseButton: true,
+                        backdrop: true,
+                    })
+                }
+            })
+        }
+    }
+    //#endregion
+    //#region deleteConType
+    function deletecontype(id) {
+        var bool = confirm("是否確定刪除此產業資料？");
+        if (bool) {
+            fetch("@Url.Action("DeleteContactTypeBasic", "CustomerBasic")", {
+                method: "POST",
+                body: JSON.stringify({
+                    ID: parseInt(id),
+                }),
+                headers: new Headers({
+                    "Content-Type": "application/json",
+                }),
+            })
+            .then((res) => {
+                return res.json();
+            }).then((resjson) => {
+                if (resjson.success) {
+                    datatableConType("#contypetable", {});
+                    Swal.fire({
+                        icon: "success",
+                        title: "成功",
+                        text: "刪除完成",
+                        showCloseButton: true,
+                        backdrop: true,
+                    });
+                }
+                else {
+                    Swal.fire({
+                        icon: "error",
+                        title: "失敗",
+                        text: "刪除錯誤",
+                        showCloseButton: true,
+                        backdrop: true,
+                    })
+                }
+            })
+        }
+    }
+    //#endregion
+
+    //#region conareadatatable
+    function datatableConArea() {
+        $("#conareatable").DataTable({
+            "processing": true,
+            "bServerSide": true,
+            "destroy": true,
+            "order": [[0, "asc"]],
+            "pageLength": "10",
+            "lengthMenu": [[10, 20, 30, 40, -1], [10, 20, 30, 40, "All"]],
+            "paging": false,
+            "searching": false,
+            "bJQueryUI": true,
+            "autoWidth": false,
+            "ajax": {
+                "url": "@Url.Action("ViewContactAreaBasicTable", "CustomerBasic")",
+                "type": "POST",
+                "data": {},
+            },
+            "columns": [
+                { "targets": 0, "data": "text1", "name": "Name" },
+                { "targets": 1, "data": "text3", "name": "CUser" },
+                { "targets": 2, "data": "text4", "name": "CTime" },
+                { "targets": 3, "data": "text5", "name": "MUser" },
+                { "targets": 4, "data": "text6", "name": "MUser" },
+                {
+                    "targets": 5, "data": null, "orderable": false,
+                    "render": function (source, type, row, meta) {
+                        let html = "";
+                        html += `<a class="btn btn-danger btnDetail mr-2" role="button" style="color: white" id="delconarea_` + source.text2 + `" >刪 除<span class="glyphicon glyphicon-trash"></span></a>`;
+                        return html;
+                    }
+                }
+            ],
+            "drawCallback": function () {
+                var conarea_ = document.querySelectorAll("button[id^='conarea_']");
+                var delconarea = document.querySelectorAll("a[id^='delconarea_']");
+                conarea_.forEach(function (tar) {
+                    tar.addEventListener("click", function () {
+                        editconarea(tar.id.split("_")[1], tar.textContent);
+                    });
+                })
+                delconarea.forEach(function (tar) {
+                    tar.addEventListener("click", function () {
+                        deleteconarea(tar.id.split("_")[1]);
+                    })
+                })
+            },
+            responsive: true
+        })
+    }
+    //#endregion
+    //#region createConArea
+    document.getElementById("createarea").addEventListener("click", function () {
+        var conarea = document.getElementById("contactArea").value;
+        if (conarea == "" || conarea == null){
+            Swal.fire({
+                icon: "error",
+                title: "錯誤",
+                text: "名稱欄位不得為空",
+                showCloseButton: true,
+                backdrop: true,
+            });
+        }
+        else {
+            fetch("@Url.Action("CreateContactAreaBasic", "CustomerBasic")", {
+                method: "POST",
+                body: JSON.stringify({
+                    ContactArea: conarea,
+                }),
+                headers: new Headers({
+                    "Content-Type": "application/json",
+                }),
+            })
+            .then((res) => {
+                return res.json();
+            }).then((resjson) => {
+                if (resjson.success) {
+                    $("#contactArea").val("");
+                    datatableConArea("#conareatable", {});
+                    Swal.fire({
+                        icon: "success",
+                        title: "成功",
+                        text: "業務區域新增完成",
+                        showCloseButton: true,
+                        backdrop: true,
+                    });
+                }
+                else {
+                    Swal.fire({
+                        icon: "error",
+                        title: "失敗",
+                            text: "業務區域新增錯誤",
+                        showCloseButton: true,
+                        backdrop: true,
+                    })
+                }
+            })
+        }
+    })
+    //#endregion
+    //#region editConArea
+    function editconarea(id, oldname) {
+        var newarea = prompt("請輸入欲修改名稱", oldname);
+        if (newarea != null) {
+            fetch("@Url.Action("EditContactAreaBasic", "CustomerBasic")", {
+                method: "POST",
+                body: JSON.stringify({
+                    ContactArea: newarea,
+                    ID: id,
+                }),
+                headers: new Headers({
+                    "Content-Type": "application/json",
+                }),
+            })
+            .then((res) => {
+                return res.json();
+            }).then((resjson) => {
+                if (resjson.success) {
+                    datatableConArea("#conareatable", {});
+                    Swal.fire({
+                        icon: "success",
+                        title: "成功",
+                        text: "修改完成",
+                        showCloseButton: true,
+                        backdrop: true,
+                    });
+                }
+                else {
+                    Swal.fire({
+                        icon: "error",
+                        title: "失敗",
+                        text: "修改錯誤",
+                        showCloseButton: true,
+                        backdrop: true,
+                    })
+                }
+            })
+        }
+    }
+    //#endregion
+    //#region deleteConArea
+    function deleteconarea(id) {
+        var bool = confirm("是否確定刪除此產業資料？");
+        if (bool) {
+            fetch("@Url.Action("DeleteContactAreaBasic", "CustomerBasic")", {
+                method: "POST",
+                body: JSON.stringify({
+                    ID: id,
+                }),
+                headers: new Headers({
+                    "Content-Type": "application/json",
+                }),
+            })
+            .then((res) => {
+                return res.json();
+            }).then((resjson) => {
+                if (resjson.success) {
+                    datatableConArea("#conareatable", {});
+                    Swal.fire({
+                        icon: "success",
+                        title: "成功",
+                        text: "刪除完成",
+                        showCloseButton: true,
+                        backdrop: true,
+                    });
+                }
+                else {
+                    Swal.fire({
+                        icon: "error",
+                        title: "失敗",
+                        text: "刪除錯誤",
+                        showCloseButton: true,
+                        backdrop: true,
+                    })
+                }
+            })
+        }
+    }
+    //#endregion
+</script>
