@@ -12,7 +12,7 @@ namespace WebC.Generic.Repository
 
         TEntity? Get(string sql, object parameters);
         IQueryable<TResult> GetAlls<TResult>(string sql) where TResult : class;
-        IQueryable<TResult> GetAlls<TResult>(string sql, object[] parameters) where TResult : class;
+        IQueryable<TResult> GetAlls<TResult>(string sql, object parameters) where TResult : class;
 
     }
 }

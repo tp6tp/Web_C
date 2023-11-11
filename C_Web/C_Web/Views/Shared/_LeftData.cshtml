@@ -2,8 +2,8 @@
 @{
     List<C_Web.Entity.SYS.SYS_List> FAtemp = new();
     List<C_Web.Entity.SYS.SYS_List> CHILDtemp = new();
-    CHILDtemp = Model.Where(x => x.FAID != 0 && x.FAID != null).ToList();
-    FAtemp = Model.Where(x => x.FAID == 0 || x.FAID == null).OrderBy(x => x.Orders).ToList();
+    CHILDtemp = Model.Where(x => x.FAID != 0 && x.FAID != null && x.OnOff).ToList();
+    FAtemp = Model.Where(x => (x.FAID == 0 || x.FAID == null) && x.OnOff).OrderBy(x => x.Orders).ToList();
 }
 
 @foreach (var fa in FAtemp)

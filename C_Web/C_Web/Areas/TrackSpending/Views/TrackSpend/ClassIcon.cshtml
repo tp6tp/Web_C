@@ -1,0 +1,97 @@
+﻿@using C_Web.Entity.TrackSpend.Enum
+@using C_WebDTO.TrackSpendDTO
+@{
+    List<ClassifyDTO> incomelsit = ViewBag.incomeList;
+    List<ClassifyDTO> expenseslist = ViewBag.expensesList;
+}
+
+
+<style>
+    #tab-title > div {
+        background-color: #BEBEBE;
+    }
+
+    #tab-title .active {
+        background-color: #ffffff;
+    }
+</style>
+
+<div class="row">
+    <h2 class="modal-title">
+        分類管理
+    </h2>
+</div>
+<div style="white-space: nowrap; display:block; align-content:center; justify-content:center;display: inline-flex; flex-wrap:wrap; width:100%">
+    <div id="tab-title" style="list-style: none; border:solid; border-radius:5px; ">
+        <div style="display: inline-flex; font-size:medium; ">
+            <a data-type="@IncomeOrExpensesEnum.支出"
+               style="font-weight:bold; text-decoration: none; color: inherit;" href="#expenses">支出</a>
+        </div>
+        <div style="display: inline-flex; font-size:medium;">
+            <a data-type="@IncomeOrExpensesEnum.收入"
+               style="font-weight:bold; text-decoration: none; color: inherit;" href="#income">收入</a>
+        </div>
+    </div>
+</div>
+
+<div class="modal-body">
+    <div class="col-xl-12 col-md-12 col-sm-12">
+        <div id="income" class="form-control tab-inner container" style="border:solid; border-color:black; margin-top:3%; height:auto; display:flex; flex-wrap:wrap">
+            @foreach(var item in incomelsit)
+            {
+                <div class="col-sm-1">
+                    <i style="display:flex; align-items:center; border:none; padding-left:27px; color: @item.TypeColorCode"
+                       class="@item.IconCode fa-2x form-control"></i>
+                    <span style="display:flex; align-items:center; border:none; padding-left:27px">@item.ClassifyName</span>
+                </div>
+            }
+        </div>
+
+        <div id="expenses" class="form-control tab-inner container" style="border:solid; border-color:black; margin-top:3%; height:auto; display:flex; flex-wrap:wrap">
+            @foreach(var item in expenseslist)
+            {
+                <div class="col-sm-1">
+                    <i style="display:flex; align-items:center; border:none; padding-left:27px; color: @item.TypeColorCode"
+                       class="@item.IconCode fa-2x form-control"></i>
+                    <span style="display:flex; align-items:center; border:none; padding-left:27px">@item.ClassifyName</span>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+<div class="modal-footer col-12">
+    <button id="CreateIcon" class="btn btn-info form-control">新 增 分 類</button>
+    <a href="/TrackSpending/TrackSpend/Index" class="btn btn-dark form-control">返 回</a>
+</div>
+
+<!--CreateIcon Modal新增分類-->
+<div class="modal fade" id="CreateIconmodal" role="dialog" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable">
+        <div class="modal-content">
+        </div>
+    </div>
+</div>
+
+<script>
+    //#region 支出收入_切換
+    $(function () {
+        var $li = $("#tab-title div")
+        $($li.eq(0).addClass("active").find("a").attr("href")).siblings(".tab-inner").hide();
+
+        $li.click(function () {
+            $($(this).find("a").attr("href")).show().siblings(".tab-inner").hide();
+            $(this).addClass("active").siblings(".active").removeClass("active");
+        });
+    })
+    //#endregion
+
+    $("#CreateIcon").on("click", function () {
+        let type = $(".active").find("a").html().toString();
+        let type2 = $(".active").find("a").attr("data-type");
+        $("#CreateIconmodal .modal-content").load("@Url.Action("CreateIconModal","TrackSpend")",
+        { Type: type,
+            Type2: type2,
+        });
+        $("#CreateIconmodal").modal("show");
+    })
+</script>

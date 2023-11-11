@@ -40,7 +40,7 @@ namespace WebC.Generic.Repository
             return info;
         }
 
-        public IQueryable<TResult> GetAlls<TResult>(string sql, object[] parameters) where TResult : class
+        public IQueryable<TResult> GetAlls<TResult>(string sql, object parameters) where TResult : class
         {
             IQueryable<TResult> info;
             using (var cn = new SqlConnection(GetDBConnString()))

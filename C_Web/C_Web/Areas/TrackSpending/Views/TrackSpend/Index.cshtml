@@ -1,0 +1,158 @@
+﻿<style>
+   /*  .modal-content{
+        height: 100%;
+    } */
+</style>
+<div class="container" >
+    <div class="row">
+        <h2 style="font-weight:bold;">
+            記帳本
+        </h2>
+    </div>
+    <hr />
+    <div style="display:block">
+        <span style="font-size:medium; font-weight:bold; text-align:left;">月支出:</span>
+        <span style="font-size:medium; font-weight:bold; float:right;">月收入:</span>
+    </div>
+    
+    <div class="col-xl-12 col-md-12 col-sm-12" style="display:flex">
+
+        <div class="col-md-4">
+            <canvas id="spendChart1">
+            </canvas>
+            <hr />
+        </div>
+
+        <div class="col-md-4">
+            <canvas id="spendChart2">
+            </canvas>
+            <hr />
+        </div>
+
+    </div>
+    
+
+
+    
+    <div class="col-md-12 col-sm-12 col-xs-12" style="margin-bottom:1%">
+        <div class="col-md-12">
+            <button id="createTrack" class="btn btn-success form-control">新 增 明 細</button>
+        </div>
+    </div>
+    <div class="col-md-12 col-sm-12 col-xs-12" style="margin-bottom:1%">
+        <div class="col-md-12">
+            <a href="@Url.Action("ViewClassIcon","TrackSpend")" class="btn btn-success form-control">分 類 管 理</a>
+        </div>
+    </div>
+
+    
+    @* <div style="flex:none; width:auto; height:auto">
+        <div class="row" style="display:flex;">
+            <div class="col-md-12 col-sm-12 col-xs-12">
+                <table class="table-bordered table-hover dt-center table nowrap tracktable con10" id="tracktable">
+                    <thead>
+                        <tr>
+                            <th>日期</th>
+                            <th>金額</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+    </div> *@
+</div>
+<!--Create Modal新增-->
+<div class="modal fade" id="Createmodal" role="dialog" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable">
+        <div class="modal-content">
+
+        </div>
+    </div>
+</div>
+
+   
+
+<script>
+    $("#createTrack").on("click", function () { 
+        $("#Createmodal .modal-content").load("@Url.Action("CreateModal","TrackSpend")");
+        $("#Createmodal").modal("show");
+    });
+
+    //#region chart
+    var ctx = document.getElementById("spendChart1").getContext('2d');
+    var spendChart = new Chart(ctx, {
+        type: "pie",
+        data: {
+            labels: ["Red", "Blue", "Yellow", "Green", "Purple", "Orange"],
+            datasets: [{
+                label: "# of Votes",
+                data: [12 ,19, 3, 5, 2, 3],
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.2)',
+                    'rgba(54, 162, 235, 0.2)',
+                    'rgba(255, 206, 86, 0.2)',
+                    'rgba(75, 192, 192, 0.2)',
+                    'rgba(153, 102, 255, 0.2)',
+                    'rgba(255, 159, 64, 0.2)'
+                ],
+                borderColor: [
+                    'rgba(255,99,132,1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 206, 86, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(153, 102, 255, 1)',
+                    'rgba(255, 159, 64, 1)'
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    ticks: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        }
+    })
+
+    var ct = document.getElementById("spendChart2").getContext('2d');
+    var spendChart2 = new Chart(ct, {
+        type: "pie",
+        data: {
+            labels: ["Red", "Blue", "Yellow", "Green", "Purple", "Orange"],
+            datasets: [{
+                label: "# of Votes",
+                data: [12, 19, 3, 5, 2, 3],
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.2)',
+                    'rgba(54, 162, 235, 0.2)',
+                    'rgba(255, 206, 86, 0.2)',
+                    'rgba(75, 192, 192, 0.2)',
+                    'rgba(153, 102, 255, 0.2)',
+                    'rgba(255, 159, 64, 0.2)'
+                ],
+                borderColor: [
+                    'rgba(255,99,132,1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 206, 86, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(153, 102, 255, 1)',
+                    'rgba(255, 159, 64, 1)'
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    ticks: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        }
+    })
+    //#endregion
+</script>

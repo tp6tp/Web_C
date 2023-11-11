@@ -24,8 +24,7 @@
             <div class="col-3 system_name loginBox">
                 <div>
                     <h3>登入Login</h3>
-
-                    @Html.TextBoxFor(x => x.Account , new{@class="form-control", placeholde="帳號", })
+                    @Html.TextBoxFor(x => x.Account , new{@class="form-control", placeholde="帳號"})
                     @Html.ValidationMessageFor(x => x.Account, "", new{@class="text-danger"})
                     <div class="table"></div>
 
