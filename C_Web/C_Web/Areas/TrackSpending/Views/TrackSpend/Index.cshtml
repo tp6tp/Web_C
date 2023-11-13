@@ -1,30 +1,44 @@
-﻿<style>
-   /*  .modal-content{
-        height: 100%;
-    } */
+﻿@{
+    List<List<List<string>>> tracks = ViewBag.data;
+
+}
+
+<style>
+  
 </style>
+
 <div class="container" >
     <div class="row">
         <h2 style="font-weight:bold;">
             記帳本
         </h2>
+        <div id="tab-title" style="display: flex; margin-left: 75%;">
+            <i class="bi bi-pie-chart-fill" style="font-size:2rem; margin-right:20%"><a href="#CHART1"></a></i>
+            <i class="bi bi-pie-chart" style="font-size:2rem; margin-right:20%"><a href="#CHART2"></a></i>
+            <i class="bi bi-bar-chart-steps" style="font-size:2rem;"><a href="#CHART3"></a></i>
+        </div>
     </div>
     <hr />
     <div style="display:block">
-        <span style="font-size:medium; font-weight:bold; text-align:left;">月支出:</span>
-        <span style="font-size:medium; font-weight:bold; float:right;">月收入:</span>
+        <span id="expenses" style="font-size:larger; color:#F0B524 ; font-weight:bold; text-align:left;"></span>
+        <span id="income" style="font-size:larger; color: #12ADCB; font-weight:bold; float:right;"></span>
     </div>
     
-    <div class="col-xl-12 col-md-12 col-sm-12" style="display:flex">
-
-        <div class="col-md-4">
+    <div class="col-xl-12 col-md-12 col-sm-12" style="display:flex; justify-content:center; text-align:center">
+        <div id="CHART1" class="col-md-5 tab-inner" style="margin: 0 auto">
             <canvas id="spendChart1">
             </canvas>
             <hr />
         </div>
 
-        <div class="col-md-4">
+        <div id="CHART2" class="col-md-5 tab-inner" style="margin: 0 auto">
             <canvas id="spendChart2">
+            </canvas>
+            <hr />
+        </div>
+
+        <div id="CHART3" class="col-md-7 tab-inner" style="margin: 0 auto">
+            <canvas id="spendChart3">
             </canvas>
             <hr />
         </div>
@@ -34,33 +48,111 @@
 
 
     
-    <div class="col-md-12 col-sm-12 col-xs-12" style="margin-bottom:1%">
-        <div class="col-md-12">
+    <div class="col-xl-12 col-md-12 col-sm-12" style="margin-bottom:1%; display:flex">
+        <div class="col-md-6">
             <button id="createTrack" class="btn btn-success form-control">新 增 明 細</button>
         </div>
-    </div>
-    <div class="col-md-12 col-sm-12 col-xs-12" style="margin-bottom:1%">
-        <div class="col-md-12">
+        <div class="col-md-6">
             <a href="@Url.Action("ViewClassIcon","TrackSpend")" class="btn btn-success form-control">分 類 管 理</a>
         </div>
     </div>
 
     
-    @* <div style="flex:none; width:auto; height:auto">
-        <div class="row" style="display:flex;">
-            <div class="col-md-12 col-sm-12 col-xs-12">
-                <table class="table-bordered table-hover dt-center table nowrap tracktable con10" id="tracktable">
-                    <thead>
-                        <tr>
-                            <th>日期</th>
-                            <th>金額</th>
-                        </tr>
-                    </thead>
-                </table>
-            </div>
+    <div class="display:block" style="height: 400px; width: auto; overflow-y: scroll; ">
+        <div class="display: block" style="width:auto">
+
+            @for (var x = 0; x < tracks.Count(); x++)
+            {
+                List<List<string>> conbination = tracks[x];
+                <div class="displa: block" style="width:500px; margin: 0 auto; margin-top: 1%; border: solid; border-radius: 10px">
+                    @for (var y = 0; y < conbination.Count(); y++)
+                    {
+                        List<string> strList = conbination[y];
+                        if (strList.Count() == 1)
+                        {
+                            <h2 style="text-align:center">@strList[0]</h2>
+                            <hr style="border:solid" />
+                        }
+                        else{
+                            <ul style="list-style: none;">
+                                <li data-TSid="@strList[5]" data-classid="@strList[6]" style="display: flex; justify-content: space-between;">
+                                    <div style="display: flex; align-items: center;">
+                                        <i class="@strList[0] fa-lg" style="color: @strList[1]; text-align:left">
+                                            @strList[2]
+                                        </i>
+                                    </div>
+                                    @{
+                                        strList[3] = strList[4] == "支出" ? "-" + strList[3] : " "+strList[3];
+                                    }
+                                    <div style="display: flex; align-items: center; margin-right: 3%">
+                                        <span style="white-space:nowrap; "><i class="fas fa-coins fa-lg" style="margin-right: 10%"></i><font class="amount" style="font-size:medium; font-weight:bold;">@strList[3]</font></span>
+                                    </div>
+                                </li>
+                                <hr />
+                            </ul>
+                        }
+                    } 
+                </div>
+            }
+                
+               
+                
+                         
+                    
+                    
+                        
+                            
+                   
+                            
+                    
+                
+                    
+                
+            @* @for (var x = 0; x < tracks.Count(); x++)
+            {
+                List<List<string>> conbination = tracks[x];
+                <div class="displa: block" style="width:500px; margin: 0 auto; margin-top: 1%; border: solid; border-radius: 10px">
+                    @for (var y = 0; y < conbination.Count(); y++)
+                    {
+                        List<string> strList = conbination[y];
+                        if (strList.Count() == 1)
+                        {
+                            <h2 style="text-align:center">@strList[0]</h2>
+                            <hr style="border:solid" />
+                        }
+                        else
+                        {
+                            <ul style="list-style: none;">
+                                <li data-TSid="@strList[5]" data-classid="@strList[6]">
+                                    <i class="@strList[0] fa-lg" style="color: @strList[1]; text-align:left">
+                                        @strList[2]
+                                    </i>
+                                    @{
+                                        strList[3] = strList[4] == "支出" ? "-" + strList[3] : strList[3];
+                                    }
+                                    <span style=";"><i class="fas fa-coins fa-lg"></i><font style="font-size:medium; font-weight:bold; margin-left: 1%">@strList[3]</font></span>
+                                </li>
+                                <hr />
+                            </ul>
+                        }
+                    }
+                </div>
+            } *@
+ 
+            @* <div class="data-block" style="width:500px; margin: 0 auto; margin-top: 1%; border: solid; border-radius: 10px">
+                <h2>區塊1</h2>
+                <hr style="border:solid"/>
+                <ul style="list-style: none; text-align:left">
+                    <li>資料1</li>
+                    <hr />
+                    <li>資料2</li>
+                </ul>
+            </div> *@
+
         </div>
-    </div> *@
+    </div>
 </div>
+
 <!--Create Modal新增-->
 <div class="modal fade" id="Createmodal" role="dialog" data-backdrop="static" data-keyboard="false">
     <div class="modal-dialog modal-lg modal-dialog-scrollable">
@@ -77,82 +169,149 @@
         $("#Createmodal .modal-content").load("@Url.Action("CreateModal","TrackSpend")");
         $("#Createmodal").modal("show");
     });
+    //#region 圖表_切換
+    $(function () {
+        var $li = $("#tab-title i")  //jq 取id tan-title的對象 底下的i標籤
+        $($li.eq(0).addClass("active").find("a").attr("href")).siblings(".tab-inner").hide("fast"); // 預設將取得的對象底下第一位[0]添加active的class屬性後, 找到其餘所有a標籤href對象內容隱藏
 
+        $li.click(function () {  //監聽click事件 變更 添加or移除active 實現切換
+            $($(this).find("a").attr("href")).show().siblings(".tab-inner").hide();
+            $(this).addClass("active").siblings(".active").removeClass("active");
+        });
+    })
+    //#endregion
+
+    $(function () {
+        let IN = 0;
+        let EX = 0;
+        let str = $(".amount");
+        str.each(function (e) {
+            console.log(parseInt(str[e].innerHTML));
+            let num = parseInt(str[e].innerHTML);
+            if(num >= 0)
+                IN += num;
+            else
+                EX += num;
+        })
+        $("#expenses").text("支出: " + EX);
+        $("#income").text("收入: " + IN);
+    })
     //#region chart
-    var ctx = document.getElementById("spendChart1").getContext('2d');
-    var spendChart = new Chart(ctx, {
-        type: "pie",
-        data: {
-            labels: ["Red", "Blue", "Yellow", "Green", "Purple", "Orange"],
-            datasets: [{
-                label: "# of Votes",
-                data: [12 ,19, 3, 5, 2, 3],
-                backgroundColor: [
-                    'rgba(255, 99, 132, 0.2)',
-                    'rgba(54, 162, 235, 0.2)',
-                    'rgba(255, 206, 86, 0.2)',
-                    'rgba(75, 192, 192, 0.2)',
-                    'rgba(153, 102, 255, 0.2)',
-                    'rgba(255, 159, 64, 0.2)'
-                ],
-                borderColor: [
-                    'rgba(255,99,132,1)',
-                    'rgba(54, 162, 235, 1)',
-                    'rgba(255, 206, 86, 1)',
-                    'rgba(75, 192, 192, 1)',
-                    'rgba(153, 102, 255, 1)',
-                    'rgba(255, 159, 64, 1)'
-                ],
-                borderWidth: 1
-            }]
-        },
-        options: {
-            scales: {
-                y: {
-                    ticks: {
-                        beginAtZero: true
+    $(function(){
+
+        //#region chart1
+        $.post("@Url.Action("ViewChart1","TrackSpend")", {}, function (e) {
+           // console.log([e.expenses[0], e.income[0]]);
+
+            var ctx = document.getElementById("spendChart1").getContext('2d');
+            var spendChart = new Chart(ctx, {
+                type: "doughnut",
+                data: {
+                    labels: ["支出", "收入",],
+                    datasets: [{
+                        label: "金額: ",
+                        data: [e.expenses[0], e.income[0]],
+                        backgroundColor: [
+                            "#F0B524",
+                            "#12ADCB",
+                        ],
+                        borderColor: "#000000",
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            ticks: {
+                                beginAtZero: true
+                            }
+                        }
                     }
                 }
-            }
-        }
+            })
+        })    
+        //#endregion
+
+        //#region chart2
+        $.post("@Url.Action("ViewChart2","TrackSpend")", {}, function (e) {
+            // console.log(e.amount);
+            // console.log(e.note);
+            // console.log(e.color);
+            var ct = document.getElementById("spendChart2").getContext('2d');
+            var spendChart2 = new Chart(ct, {
+                type: "doughnut",
+                data: {
+                    labels: e.note,
+                    datasets: [{
+                        label: "金額: ",
+                        data: e.amount,
+                        backgroundColor: e.color,
+                        borderColor: "#000000",
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            ticks: {
+                                beginAtZero: true
+                            }
+                        }
+                    }
+                }
+            })
+        })
+        //#endregion
+
+        //#region chart3
+        $.post("@Url.Action("ViewChart3","TrackSpend")", {}, function (e) {
+            // console.log(e.date);
+            // console.log(e.expenses);
+            // console.log(e.income);
+            // console.log(e.cashsurplus);
+            var ct = document.getElementById("spendChart3").getContext('2d');
+            var spendChart2 = new Chart(ct, {
+                type: "bar",
+                data: {
+                    labels: e.date,
+                    datasets: [{
+                        label: "收入: ",
+                        data:e.income,
+                        backgroundColor: "#12ADCB",
+                        borderColor: "#12ADCB",
+                        showLine: true
+                    },
+                    {
+                        label: "支出: ",
+                        data:e.expenses,
+                        backgroundColor: "#F0B524",
+                        borderColor: "#F0B524",
+                        showLine: true
+                    },
+                    {
+                        label: "結餘: ",
+                        data: e.cashsurplus,
+                        backgroundColor: "#F98282",
+                        borderColor: "#F98282",
+                        showLine: true
+                    }
+                    ]
+                },
+                options: {
+                    indexAxis: "y",
+                },
+                scales: {
+                    y: {
+                        ticks: {
+                            beginAtZero: true
+                        },
+                        position: "top"
+                    }
+                }
+            })
+        })
+        //#endregion
     })
 
-    var ct = document.getElementById("spendChart2").getContext('2d');
-    var spendChart2 = new Chart(ct, {
-        type: "pie",
-        data: {
-            labels: ["Red", "Blue", "Yellow", "Green", "Purple", "Orange"],
-            datasets: [{
-                label: "# of Votes",
-                data: [12, 19, 3, 5, 2, 3],
-                backgroundColor: [
-                    'rgba(255, 99, 132, 0.2)',
-                    'rgba(54, 162, 235, 0.2)',
-                    'rgba(255, 206, 86, 0.2)',
-                    'rgba(75, 192, 192, 0.2)',
-                    'rgba(153, 102, 255, 0.2)',
-                    'rgba(255, 159, 64, 0.2)'
-                ],
-                borderColor: [
-                    'rgba(255,99,132,1)',
-                    'rgba(54, 162, 235, 1)',
-                    'rgba(255, 206, 86, 1)',
-                    'rgba(75, 192, 192, 1)',
-                    'rgba(153, 102, 255, 1)',
-                    'rgba(255, 159, 64, 1)'
-                ],
-                borderWidth: 1
-            }]
-        },
-        options: {
-            scales: {
-                y: {
-                    ticks: {
-                        beginAtZero: true
-                    }
-                }
-            }
-        }
-    })
     //#endregion
 </script>

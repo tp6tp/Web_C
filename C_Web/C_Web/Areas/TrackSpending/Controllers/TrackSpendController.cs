@@ -3,6 +3,7 @@ using C_Web.Entity.TrackSpend.Enum;
 using C_Web.Extension;
 using C_WebDTO.SessionDTO;
 using C_WebDTO.TrackSpendDTO;
+using Humanizer;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -22,6 +23,9 @@ namespace C_Web.Areas.TrackSpending.Controllers
         }
         public IActionResult Index()
         {
+            long UserId = HttpContext.Session.GetObject<UserSessionDTO>("User").UserId;
+            List<TrackSpendDTO> tracks = _ITrackSpend_Services.GetTracks(UserId);
+            ViewBag.data = _ITrackSpend_Services.Make3Array(tracks);
             return View();
         }
 
@@ -33,7 +37,6 @@ namespace C_Web.Areas.TrackSpending.Controllers
             ViewBag.expensesList = classList.Where(x => x.IncomeOrExpenses == IncomeOrExpensesEnum.支出).OrderBy(x => x.ClassfyTypeId).ToList();
             return PartialView("_Create");
         }
-
         public IActionResult ViewClassIcon()
         {
             long UserId = HttpContext.Session.GetObject<UserSessionDTO>("User").UserId;
@@ -71,6 +74,27 @@ namespace C_Web.Areas.TrackSpending.Controllers
                 return Json(new { Success = true });
             }
             return Json(new { Success = false });
+        }
+
+        [HttpPost]
+        public IActionResult ViewChart1(string SDate, string EDate)
+        {
+            long UserId = HttpContext.Session.GetObject<UserSessionDTO>("User").UserId;
+            object[] result = _ITrackSpend_Services.GetChart1(SDate, EDate, UserId);
+            return Json(new { income = result[0], expenses = result[1] });
+        }
+        [HttpPost]
+        public IActionResult ViewChart2(string SDate, string EDate)
+        {
+            long UserId = HttpContext.Session.GetObject<UserSessionDTO>("User").UserId;
+            object[] result = _ITrackSpend_Services.GetChat2(SDate, EDate, UserId);
+            return Json(new { amount = result[0], note = result[1], color = result[2] });
+        }
+        public IActionResult ViewChart3(string SDate, string EDate)
+        {
+            long UserId = HttpContext.Session.GetObject<UserSessionDTO>("User").UserId;
+            object[] result = _ITrackSpend_Services.GetChart3(SDate, EDate, UserId);
+            return Json(new { date = result[0], expenses = result[1], income = result[2], cashsurplus = result[3] });
         }
     }
 }
