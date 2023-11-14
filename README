@@ -1,0 +1,146 @@
+ **<h1>C_MIS**
+<h2>本專案為個人練習撰寫各個小功能集合的後台系統</h2>
+<h3>內容是一個管理本後台各功能的CRUD、啟用/關閉,以及參考市面上的記帳app實作出的記帳本功能</h3>
+<h3>系統架構圖</h3>
+
+    C_Web
+    │  .editorconfig
+    │  C_Web.sln
+    │  package-lock.json
+    │  package.json
+    │  
+    ├─C_Web
+    │  │  appsettings.Development.json
+    │  │  appsettings.json
+    │  │  C_Web.csproj
+    │  │  C_Web.csproj.user
+    │  │  libman.json
+    │  │  Program.cs
+    │  │  ScaffoldingReadMe.txt
+    │  │  Startup.cs
+    │  │  
+    │  ├─.config
+    │  │      dotnet-tools.json
+    │  │      
+    │  ├─Areas          //Area、Controller、View層
+    │  │  ├─TrackSpending
+    │  │  │  ├─Controllers
+    │  │  │  │      TrackSpendBasicController.cs
+    │  │  │  │      TrackSpendController.cs
+    │  │  │  │      
+    │  │  │  └─Views
+    │  │  │      │  _ViewStart.cshtml
+    │  │  │      │  
+    │  │  │      └─TrackSpend
+    │  │  │              ClassIcon.cshtml
+    │  │  │              Index.cshtml
+    │  │  │              _Create.cshtml
+    │  │  │              _CreateIcon.cshtml
+    │  │  │              _Edit.cshtml
+    │  │  │              
+    │  │  └─WebCAdmin
+    │  │      ├─Controllers
+    │  │      │      HomeController.cs
+    │  │      │      SYSListController.cs
+    │  │      │      
+    │  │      └─Views
+    │  │          │  _ViewStart.cshtml
+    │  │          │  
+    │  │          ├─Home
+    │  │          │      Index.cshtml
+    │  │          │      
+    │  │          └─SYSList
+    │  │                  Index.cshtml
+    │  │                  _Create.cshtml
+    │  │                  _Edit.cshtml        
+    │  │                  
+    │  ├─Controllers
+    │  │      HomeController.cs
+    │  │      
+    │  ├─Models
+    │  │      ErrorViewModel.cs
+    │  │                     
+    │  ├─Views
+    │  │  │  _ViewImports.cshtml
+    │  │  │  _ViewStart.cshtml
+    │  │  │  
+    │  │  ├─Home
+    │  │  │      Index.cshtml
+    │  │  │      Login.cshtml
+    │  │  │      Privacy.cshtml
+    │  │  │      
+    │  │  └─Shared               //layout層
+    │  │          _Layout.cshtml
+    │  │          _LeftData.cshtml
+    │  │          _LeftMenu.cshtml
+    │  │          
+    │  └─wwwroot 
+    │      │  favicon.ico
+    │      │  
+    │      └─source            //前端套件、css、js檔存放處
+    │          ├─bootstrap-4.6.2-dist   
+    │          ├─bootstrap-datetimepicker             
+    │          ├─css
+    │          ├─DataTables
+    │          ├─datatables.net
+    │          └─select2
+    │                      
+    ├─C_Web.Entity                //Emtity類別 分別對應資料庫的表
+    │  │  C_Web.Entity.csproj
+    │  │  
+    │  ├─SYS
+    │  │    SYS_List.cs
+    │  │    SYS_UserManager.cs
+    │  │      
+    │  └─TrackSpend
+    │      │  Classify_Info.cs
+    │      │  IconType_Info.cs
+    │      │  Icon_Info.cs
+    │      │  TrackSpend_Info.cs
+    │      │  
+    │      └─Enum
+    │          IncomeOrExpensesEnum.cs
+    │              
+    ├─C_Web.Extension
+    │  │  C_Web.Extension.csproj
+    │  │  HtmlIHelperViewExtension.cs  //Html Helper的靜態擴充方法 用於前端指定的action來非同步渲染畫面
+    │  │  SessionGetSet.cs            //user登入時添加session和功能中需要取得當前使用者session資訊時常用方法
+    │  │              
+    │  ├─DBConn
+    │       DBConnCS.cs              // 取sql連線字串
+    │                      
+    │      
+    ├─C_WebDTO                    //主要傳接值用的物件
+    │  C_WebDTO.csproj          
+    │  ├─CommonDTO
+    │  │      DTOForDataTable.cs
+    │  │      FetchDTO.cs
+    │  │                  
+    │  ├─SessionDTO
+    │  │      UserSessionDTO.cs
+    │  │      
+    │  ├─sysDTO
+    │  │      LoginDTO.cs
+    │  │      
+    │  └─TrackSpendDTO
+    │          ClassIconDTO.cs
+    │          
+    ├─Generic.Repository             //通用方法區分Interface和實作,方便在其他功能的service層注入
+    │    DataContext.cs              // Entity Framework 的DbSet<>泛型集合當中對應Model層的Entity,方便對資料庫進行CRUD操作
+    │    GenericRepository.cs
+    │    IGenericRepository.cs
+    │    WebC.Generic.Repository.csproj
+    │                      
+    ├─SYSList_Services                 //功能管理_功能 資料主要的邏輯處理         
+    │   ISYSList_Services.cs
+    │   SYSList_Services.cs
+    │   Web_SYSList_Services.csproj
+    │  
+    │                      
+    └─Web_TrackSpend_Services       //帳務管理_功能  資料主要的邏輯處理
+          ITrackSpend_Services.cs
+          TrackSpend_Services.cs
+          Web_TrackSpend_Services.csproj
+         
+      
+                            
