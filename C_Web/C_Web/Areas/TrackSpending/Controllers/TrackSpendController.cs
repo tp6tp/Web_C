@@ -21,11 +21,16 @@ namespace C_Web.Areas.TrackSpending.Controllers
         {
             this._ITrackSpend_Services = _ITrackSpend_Services;
         }
-        public IActionResult Index()
+        public IActionResult Index(string? nowdate)
         {
             long UserId = HttpContext.Session.GetObject<UserSessionDTO>("User").UserId;
-            List<TrackSpendDTO> tracks = _ITrackSpend_Services.GetTracks(UserId);
+            if (nowdate == null)
+                nowdate = DateTime.Now.Month.ToString();
+            else
+                nowdate = nowdate.Split("-")[1];
+            List<TrackSpendDTO> tracks = _ITrackSpend_Services.GetTracks(UserId, nowdate);
             ViewBag.data = _ITrackSpend_Services.Make3Array(tracks);
+            ViewBag.nowM = DateTime.Now.Year + "-" + nowdate;
             return View();
         }
 
@@ -36,6 +41,15 @@ namespace C_Web.Areas.TrackSpending.Controllers
             ViewBag.incomeList = classList.Where(x => x.IncomeOrExpenses == IncomeOrExpensesEnum.收入).OrderBy(x => x.ClassfyTypeId).ToList();
             ViewBag.expensesList = classList.Where(x => x.IncomeOrExpenses == IncomeOrExpensesEnum.支出).OrderBy(x => x.ClassfyTypeId).ToList();
             return PartialView("_Create");
+        }
+        public IActionResult EditModal(string TrackSpendId)
+        {
+            long UserId = HttpContext.Session.GetObject<UserSessionDTO>("User").UserId;
+            List<ClassifyDTO> classList = _ITrackSpend_Services.GetClassifyInfoList(UserId);
+            ViewBag.incomeList = classList.Where(x => x.IncomeOrExpenses == IncomeOrExpensesEnum.收入).OrderBy(x => x.ClassfyTypeId).ToList();
+            ViewBag.expensesList = classList.Where(x => x.IncomeOrExpenses == IncomeOrExpensesEnum.支出).OrderBy(x => x.ClassfyTypeId).ToList();
+            ViewBag.model = _ITrackSpend_Services.GetEditTrack(TrackSpendId);
+            return PartialView("_Edit");
         }
         public IActionResult ViewClassIcon()
         {
@@ -75,7 +89,15 @@ namespace C_Web.Areas.TrackSpending.Controllers
             }
             return Json(new { Success = false });
         }
-
+        [HttpPost]
+        public IActionResult EditTrackSpend([FromBody] TrackSpendDTO DTO)
+        {
+            if (_ITrackSpend_Services.EditTrackSpendInfo(DTO))
+            {
+                    return Json(new { Success = true });
+            }
+                return Json(new { Success = false });
+        }
         [HttpPost]
         public IActionResult ViewChart1(string SDate, string EDate)
         {

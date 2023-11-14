@@ -5,6 +5,7 @@ using C_WebDTO.TrackSpendDTO;
 using System;
 using System.Configuration;
 using System.Data.Entity;
+using System.Data.SqlTypes;
 using System.Net;
 using System.Reflection.Emit;
 using System.Security.Cryptography.X509Certificates;
@@ -45,17 +46,34 @@ namespace Web_TrackSpend_Services
                 return new List<IconType_Info>();
             }
         }
-        
-
-        public List<TrackSpendDTO> GetTracks(long UserId) 
+        public TrackSpendDTO GetEditTrack(string TrackSpendId)
         {
             try
             {
-                return GEDB.GetAlls<TrackSpendDTO>($"SELECT * FROM TrackSpend_Info TS " +
+                return GEDB.GetAlls<TrackSpendDTO>($"SELECT * FROM TrackSpend_Info TS" +
+                    $" LEFT JOIN Classify_Info class ON class.ClassifyId = TS.ClassifyId" +
+                    $" LEFT JOIN Icon_Info icon on icon.IconId = class.ClassifyIconId" +
+                    $" WHERE TrackSpendId=@id", new { id=TrackSpendId}).FirstOrDefault();
+            }
+            catch(Exception e)
+            {
+                return new TrackSpendDTO();
+            }
+        }
+
+        public List<TrackSpendDTO> GetTracks(long UserId, string nowdate) 
+        {
+            try
+            {
+                string Sql = $"SELECT * FROM TrackSpend_Info TS " +
                     $"LEFT JOIN Classify_Info class on TS.ClassifyId = class.ClassifyId " +
                     $"LEFT JOIN Icon_Info icon on icon.IconId = class.ClassifyIconId " +
                     $"LEFT JOIN IconType_Info itype on itype.Icon_TypeId = class.ClassifyTypeId " +
-                    $"WHERE TS.UserId=@id", new { id = UserId }).ToList();
+                    $"WHERE TS.UserId=@id";
+                Sql += string.IsNullOrEmpty(nowdate) ? "" : $" AND DATEPART(MONTH, NowDate) = @month";
+                Sql += $" ORDER BY TS.NowDate ASC";
+
+                return GEDB.GetAlls<TrackSpendDTO>(Sql, new { id = UserId, month = nowdate }).ToList();
             }
             catch(Exception e )
             {
@@ -119,6 +137,30 @@ namespace Web_TrackSpend_Services
                 return true;
             }
             catch (Exception e)
+            {
+                return false;
+            }
+        }
+
+        public bool EditTrackSpendInfo(TrackSpendDTO DTO)
+        {
+            try
+            {
+                DTO.NowDate = Convert.ToDateTime(DTO.NowDate).ToString("yyyy/MM/dd");
+                DTO.Week = ParseWeekCh(Convert.ToDateTime(DTO.NowDate).DayOfWeek.ToString());
+                DTO.Years = DTO.NowDate.Split("/")[0];
+                DTO.Month = DTO.NowDate.Split("/")[1];
+                GEDB.GetAlls<TrackSpend_Info>($"UPDATE TrackSpend_Info SET Note=@note, NowDate=@date," +
+                    $" Week=@week, TotalAmount=@amount, Years=@years, Month=@month, ClassifyId=@classid," +
+                    $" IncomeOrExpenses=@inorex WHERE TrackSpendId=@id",
+                    new { note=DTO.Note, date=DTO.NowDate, week=DTO.Week, amount=DTO.TotalAmount,
+                                years=DTO.Years, month=DTO.Month, classid=DTO.ClassifyId, 
+                                inorex = (IncomeOrExpensesEnum)Enum.Parse(typeof(IncomeOrExpensesEnum), DTO.InOrEx),
+                                id=DTO.TrackSpendId});
+                db.SaveChanges();
+                return true;
+            }
+            catch(Exception e)
             {
                 return false;
             }

@@ -1,18 +1,18 @@
 ﻿@{
     List<List<List<string>>> tracks = ViewBag.data;
-
 }
 
 <style>
-  
+
 </style>
 
 <div class="container" >
     <div class="row">
         <h2 style="font-weight:bold;">
             記帳本
-        </h2>
-        <div id="tab-title" style="display: flex; margin-left: 75%;">
+        </h2>     
+        <div id="tab-title" style="display: flex; margin-left: 60%;">
+            <input id="searchmonth" type="month" style="margin-right:20%" value="@ViewBag.nowM" />
             <i class="bi bi-pie-chart-fill" style="font-size:2rem; margin-right:20%"><a href="#CHART1"></a></i>
             <i class="bi bi-pie-chart" style="font-size:2rem; margin-right:20%"><a href="#CHART2"></a></i>
             <i class="bi bi-bar-chart-steps" style="font-size:2rem;"><a href="#CHART3"></a></i>
@@ -20,29 +20,25 @@
     </div>
     <hr />
     <div style="display:block">
-        <span id="expenses" style="font-size:larger; color:#F0B524 ; font-weight:bold; text-align:left;"></span>
-        <span id="income" style="font-size:larger; color: #12ADCB; font-weight:bold; float:right;"></span>
+        <span id="totalexpenses" style="font-size:larger; color:#F0B524 ; font-weight:bold; text-align:left;"></span>
+        <span id="totalincome" style="font-size:larger; color: #12ADCB; font-weight:bold; float:right;"></span>
     </div>
-    
     <div class="col-xl-12 col-md-12 col-sm-12" style="display:flex; justify-content:center; text-align:center">
         <div id="CHART1" class="col-md-5 tab-inner" style="margin: 0 auto">
             <canvas id="spendChart1">
             </canvas>
             <hr />
         </div>
-
         <div id="CHART2" class="col-md-5 tab-inner" style="margin: 0 auto">
             <canvas id="spendChart2">
             </canvas>
             <hr />
         </div>
-
         <div id="CHART3" class="col-md-7 tab-inner" style="margin: 0 auto">
             <canvas id="spendChart3">
             </canvas>
             <hr />
         </div>
-
     </div>
     
 
@@ -58,7 +54,7 @@
     </div>
 
     
-    <div class="display:block" style="height: 400px; width: auto; overflow-y: scroll; ">
+    <div id="trackstable" class="display:block" style="height: 400px; width: auto; overflow-y: scroll; ">
         <div class="display: block" style="width:auto">
 
             @for (var x = 0; x < tracks.Count(); x++)
@@ -74,12 +70,13 @@
                             <hr style="border:solid" />
                         }
                         else{
-                            <ul style="list-style: none;">
-                                <li data-TSid="@strList[5]" data-classid="@strList[6]" style="display: flex; justify-content: space-between;">
+                            <ul id="track_@strList[5]" style="list-style: none;">
+                                <li data-classid="@strList[6]" style="display: flex; justify-content: space-between;">
                                     <div style="display: flex; align-items: center;">
-                                        <i class="@strList[0] fa-lg" style="color: @strList[1]; text-align:left">
-                                            @strList[2]
+                                        <i class="@strList[0] fa-2x" style="color: @strList[1]; text-align:left">
+                                            &thinsp;
                                         </i>
+                                        <font class="" style="font-size:larger; font-weight:bold; ">@strList[2]</font>
                                     </div>
                                     @{
                                         strList[3] = strList[4] == "支出" ? "-" + strList[3] : " "+strList[3];
@@ -94,61 +91,6 @@
                     } 
                 </div>
             }
-                
-               
-                
-                         
-                    
-                    
-                        
-                            
-                   
-                            
-                    
-                
-                    
-                
-            @* @for (var x = 0; x < tracks.Count(); x++)
-            {
-                List<List<string>> conbination = tracks[x];
-                <div class="displa: block" style="width:500px; margin: 0 auto; margin-top: 1%; border: solid; border-radius: 10px">
-                    @for (var y = 0; y < conbination.Count(); y++)
-                    {
-                        List<string> strList = conbination[y];
-                        if (strList.Count() == 1)
-                        {
-                            <h2 style="text-align:center">@strList[0]</h2>
-                            <hr style="border:solid" />
-                        }
-                        else
-                        {
-                            <ul style="list-style: none;">
-                                <li data-TSid="@strList[5]" data-classid="@strList[6]">
-                                    <i class="@strList[0] fa-lg" style="color: @strList[1]; text-align:left">
-                                        @strList[2]
-                                    </i>
-                                    @{
-                                        strList[3] = strList[4] == "支出" ? "-" + strList[3] : strList[3];
-                                    }
-                                    <span style=";"><i class="fas fa-coins fa-lg"></i><font style="font-size:medium; font-weight:bold; margin-left: 1%">@strList[3]</font></span>
-                                </li>
-                                <hr />
-                            </ul>
-                        }
-                    }
-                </div>
-            } *@
- 
-            @* <div class="data-block" style="width:500px; margin: 0 auto; margin-top: 1%; border: solid; border-radius: 10px">
-                <h2>區塊1</h2>
-                <hr style="border:solid"/>
-                <ul style="list-style: none; text-align:left">
-                    <li>資料1</li>
-                    <hr />
-                    <li>資料2</li>
-                </ul>
-            </div> *@
-
         </div>
     </div>
 </div>
@@ -161,7 +103,14 @@
         </div>
     </div>
 </div>
+<!--Edit Modal修改-->
+<div class="modal fade" id="Editmodal" role="dialog" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable">
+        <div class="modal-content">
 
+        </div>
+    </div>
+</div>
    
 
 <script>
@@ -169,6 +118,13 @@
         $("#Createmodal .modal-content").load("@Url.Action("CreateModal","TrackSpend")");
         $("#Createmodal").modal("show");
     });
+    $(function () {
+        $("#searchmonth").on("change", function (e) {
+            console.log($("#searchmonth").val());
+            $("#trackstable").load("/TrackSpending/TrackSpend?nowdate=" + $("#searchmonth").val() + " #trackstable>*", "");
+        })
+    })
+
     //#region 圖表_切換
     $(function () {
         var $li = $("#tab-title i")  //jq 取id tan-title的對象 底下的i標籤
@@ -181,21 +137,24 @@
     })
     //#endregion
 
+    //#region 收入支出 結算
     $(function () {
         let IN = 0;
         let EX = 0;
         let str = $(".amount");
         str.each(function (e) {
-            console.log(parseInt(str[e].innerHTML));
+            // console.log(parseInt(str[e].innerHTML));
             let num = parseInt(str[e].innerHTML);
             if(num >= 0)
                 IN += num;
             else
                 EX += num;
         })
-        $("#expenses").text("支出: " + EX);
-        $("#income").text("收入: " + IN);
+        $("#totalexpenses").text("支出: " + EX);
+        $("#totalincome").text("收入: " + IN);
     })
+    //#endregion
+
     //#region chart
     $(function(){
 
@@ -314,4 +273,11 @@
     })
 
     //#endregion
+
+    $("[id^=track_]").on("click", function () { 
+        let ID = $(this)[0].id.split("_")[1];
+         // console.log(ID);
+        $("#Editmodal .modal-content").load("@Url.Action("EditModal","TrackSpend")", {TrackSpendId: ID});
+        $("#Editmodal").modal("show");  
+    })
 </script>

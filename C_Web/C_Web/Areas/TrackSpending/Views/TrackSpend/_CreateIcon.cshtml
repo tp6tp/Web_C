@@ -107,6 +107,7 @@
             }).then((resjson) => {
                 if (resjson.success) {
                     $("#CreateIconmodal").modal("hide");
+                    $("#classicontable").load(location.href + " #classicontable>*", "");
                     Swal.fire({
                         icon: "success",
                         title: "成功",
