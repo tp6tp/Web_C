@@ -1,0 +1,212 @@
+﻿@using C_Web.Entity.TrackSpend.Enum
+@using C_WebDTO.TrackSpendDTO
+@{
+    List<ClassifyDTO> incomelsit = ViewBag.incomeList;
+    List<ClassifyDTO> expenseslist = ViewBag.expensesList;
+    TrackSpendDTO track = ViewBag.model;
+}
+<style>
+    #edittabtitle > div {
+        background-color: #BEBEBE;
+    }
+
+    #edittabtitle .editactive {
+        background-color: #ffffff;
+    }
+</style>
+<div class="modal-header">
+    <h2 class="modal-title">
+        紀錄修改
+    </h2>
+    <button type="button" class="close" data-dismiss="modal">&times;</button>
+</div>
+<div style="white-space: nowrap; display:block; align-content:center; justify-content:center;display: inline-flex; flex-wrap:wrap; width:auto">
+    <input id="INorEX" value="@track.IncomeOrExpenses" readonly hidden />
+    <div id="edittabtitle" style="list-style: none; border:solid; border-radius:5px; "> 
+        <div style="display: inline-flex; font-size:medium; ">
+            <a style="font-weight:bold; text-decoration: none; color: inherit;" href="#editexpenses">支出</a>
+        </div>
+        <div style="display: inline-flex; font-size:medium;">
+            <a style="font-weight:bold; text-decoration: none; color: inherit;" href="#editincome">收入</a>
+        </div> 
+    </div>
+</div>
+<div class="modal-body">
+    <div class="col-xl-12 col-md-12 col-sm-12">
+        <div id="editincome" class="form-control edittab-inner container" style="border:solid; border-color:black; margin-top:3%; height:auto; display:flex; flex-wrap:wrap">
+            @foreach (var item in incomelsit)
+            {
+                <div class="col-sm-2">
+                    @if (track.IconCode == item.IconCode)
+                    {
+                        <i style="display:flex; align-items:center; border:none; padding-left:27px; color: @item.TypeColorCode; border: solid"
+                           data-icon="@item.IconCode" data-Id="@item.ClassifyId"
+                        class="@item.IconCode fa-2x form-control ICON"></i>
+                    }
+                    else
+                    {
+                        <i style="display:flex; align-items:center; border:none; padding-left:27px; color: @item.TypeColorCode"
+                           data-icon="@item.IconCode" data-Id="@item.ClassifyId"
+                           class="@item.IconCode fa-2x form-control ICON"></i>
+                    }
+                    <span style="display:flex; align-items:center; border:none; padding-left:27px">@item.ClassifyName</span>
+                </div>
+            }
+        </div>
+
+        <div id="editexpenses" class="form-control edittab-inner container" style="border:solid; border-color:black; margin-top:3%; height:auto; display:flex; flex-wrap:wrap">
+            @foreach (var item in expenseslist)
+            {
+                <div class="col-sm-2">
+                    @if (track.IconCode == item.IconCode)
+                    {
+                        <i style="display:flex; align-items:center; border:none; padding-left:27px; color: @item.TypeColorCode; border:solid; border-color: black"
+                           data-icon="@item.IconCode" data-Id="@item.ClassifyId"
+                        class="@item.IconCode fa-2x form-control ICON"></i>
+                    }
+                    else
+                    {
+                        <i style="display:flex; align-items:center; border:none; padding-left:27px; color: @item.TypeColorCode"
+                           data-icon="@item.IconCode" data-Id="@item.ClassifyId"
+                           class="@item.IconCode fa-2x form-control ICON"></i>
+                    }
+                    <span style="display:flex; align-items:center; border:none; padding-left:27px">@item.ClassifyName</span>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+<div class="modal-footer">
+    <div class="col-md-12 col-xs-12 col-sm-12">
+        <div class="form-control" style="border:solid; margin-top:3%; height:auto; display:flex; flex-wrap:wrap">
+            <div class="col-md-1">
+                <i class="fas fa-calendar-alt fa-2x"></i>
+            </div>
+            <div class="col-md-6">
+                <input id="editdate" class="form-control" type="date" value="@Convert.ToDateTime(track.NowDate).ToString("yyyy-MM-dd")" />
+            </div>
+            <div class="col-1">
+                <i class="fas fa-coins fa-2x">:</i>
+            </div>
+            <div class="col-md-4">
+                <input id="editamount" class="form-control" placeholder="金額" value="@track.TotalAmount"/>
+            </div>
+
+
+            <div class="col-md-1" style="margin-top:1%">
+                <input id="oldid" value="@track.ClassifyId" readonly hidden/>
+                <input id="tsid" value="@track.TrackSpendId" readonly hidden />
+                <i id="edittitle" class="@track.IconCode fa-2x"></i>
+            </div>
+            <div class="col-md-11" style="margin-top:1%">
+                <input id="editnote" class="form-control" placeholder="請輸入備註" value="@track.Note" maxlength="10"/>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-12 col-xs-12 col-sm-12">
+        <button id="editTrackSpend" class="btn btn-success form-control" style="font-weight:bold">修 改 送 出</button>
+        @* <button class="btn btn-success form-control" style="font-weight:bold; margin-top: 1%;">再 一 筆</button> *@
+    </div>
+</div>
+
+<script>
+    $(function () {
+        let editicon = $("#edittitle").attr("class").split("fa-2x")[0];
+        let editclassifyId = $("#oldid").val();
+
+        //#region 支出收入_切換
+        $(function () {
+            var $li = $("#edittabtitle div")
+            // console.log($("#INorEX").val());
+            if ($("#INorEX").val() == "支出")
+                $($li.eq(0).addClass("editactive").find("a").attr("href")).siblings(".edittab-inner").hide();
+            else
+                $($li.eq(1).addClass("editactive").find("a").attr("href")).siblings(".edittab-inner").hide();
+            $li.click(function () {
+                $($(this).find("a").attr("href")).show().siblings(".edittab-inner").hide();
+                $(this).addClass("editactive").siblings(".editactive").removeClass("editactive");
+            });
+        })
+        //#endregion
+
+        //#region 動態變更屬性值
+        $(".ICON").on("click", function () {
+            let icon = $(this).attr("data-icon");
+            /* postcolor = $(this).css("color");  */ //取屬性放入要post的變數
+            editicon = icon;
+            editclassifyId = $(this).attr("data-Id");
+
+            $(".ICON").css("border", "none");  //動態變更 style屬性
+            $(this).css("border", "solid");
+            $(this).css("border-color", "black");
+
+            $("#edittitle").attr("class", icon + " fa-2x");
+        })
+        //#endregion
+
+        //#region edit
+        $("#editTrackSpend").on("click", function () {
+            // console.log(editicon);
+            // console.log(editclassifyId);
+            if (editicon == "") {
+                error("請選擇一分類");
+                return false;
+            }
+            if ($("#editnote").val() == "") {
+                error("請輸入備註");
+                return false;
+            }
+            if ($("#editdate").val() == "") {
+                error("請輸入日期");
+                return false;
+            }
+            else{
+                console.log($("#editnote").val(), $("#editdate").val(), parseInt($("#editamount").val()), parseInt(editclassifyId), $(".editactive").find("a").text());
+                fetch("@Url.Action("EditTrackSpend", "TrackSpend")", {
+                    method: "POST",
+                    body: JSON.stringify({
+                        Note: $("#editnote").val(),
+                        NowDate: $("#editdate").val(),
+                        TotalAmount: isNaN(parseInt($("#editamount").val())) ? 0 : parseInt($("#editamount").val()),
+                        ClassifyId: parseInt(editclassifyId),
+                        InOrEx: $(".editactive").find("a").text(),
+                        TrackSpendId: $("#tsid").val(),
+                    }),
+                    headers: new Headers({
+                        "Content-Type": "application/json",
+                    }),
+                })
+                .then((res) => {
+                    return res.json();
+                }).then((resjson) => {
+                    if (resjson.success) {
+                        $("#Editmodal").modal("hide");
+                        $("#trackstable").load(location.href+" #trackstable>*","");
+                        Swal.fire({
+                            icon: "success",
+                            title: "成功",
+                            text: "修改完成",
+                            showCloseButton: true,
+                            backdrop: true,
+                        });
+                    }
+                    else {
+                        Swal.fire({
+                            icon: "error",
+                            title: "修改錯誤",
+                            showCloseButton: true,
+                            backdrop: true,
+                        })
+                    }
+                })
+            }
+        })
+        //#endregion
+    })
+
+    
+
+   
+
+    
+</script>
