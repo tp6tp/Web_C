@@ -98,6 +98,14 @@ namespace C_Web.Areas.TrackSpending.Controllers
             }
                 return Json(new { Success = false });
         }
+        public IActionResult DeleteClassify(int ClassifyId)
+        {
+            if (_ITrackSpend_Services.DeleteClassifyInfo(ClassifyId))
+            {
+                return Json(new { Success = true });
+            }
+            return Json(new { Success = false });
+        }
         [HttpPost]
         public IActionResult ViewChart1(string SDate, string EDate)
         {

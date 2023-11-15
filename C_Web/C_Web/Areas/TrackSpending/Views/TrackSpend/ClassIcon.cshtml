@@ -36,33 +36,42 @@
 
 <div id="classicontable" class="modal-body">
     <div class="col-xl-12 col-md-12 col-sm-12">
-        <div id="income" class="form-control tab-inner container" style="border:solid; border-color:black; margin-top:3%; height:auto; display:flex; flex-wrap:wrap">
+        <div id="income" class="form-control tab-inner container" style="border:solid; border-color:black; margin-top:1%; height:auto; display:flex; flex-wrap:wrap">
             @foreach(var item in incomelsit)
             {
                 <div class="col-sm-1">
                     <i style="display:flex; align-items:center; border:none; padding-left:27px; color: @item.TypeColorCode"
-                       class="@item.IconCode fa-2x form-control"></i>
+                       class="@item.IconCode fa-2x form-control"><i id="deleteclass_@item.ClassifyId" class="bi bi-x-circle" style="font-size:1rem;  margin-bottom: 31px; display:none; color:black"></i></i>
                     <span style="display:flex; align-items:center; border:none; padding-left:27px">@item.ClassifyName</span>
                 </div>
             }
         </div>
 
-        <div id="expenses" class="form-control tab-inner container" style="border:solid; border-color:black; margin-top:3%; height:auto; display:flex; flex-wrap:wrap">
+        <div id="expenses" class="form-control tab-inner container" style="border:solid; border-color:black; margin-top:1%; height:auto; display:flex; flex-wrap:wrap">
             @foreach(var item in expenseslist)
             {
                 <div class="col-sm-1">
                     <i style="display:flex; align-items:center; border:none; padding-left:27px; color: @item.TypeColorCode"
-                       class="@item.IconCode fa-2x form-control"></i>
+                       class="@item.IconCode fa-2x form-control"><i id="deleteclass_@item.ClassifyId" class="bi bi-x-circle" style="font-size:1rem;  margin-bottom: 31px; display:none; color:black"></i></i>
                     <span style="display:flex; align-items:center; border:none; padding-left:27px">@item.ClassifyName</span>
                 </div>
             }
         </div>
     </div>
 </div>
-<div class="modal-footer col-12">
-    <button id="CreateIcon" class="btn btn-info form-control">新 增 分 類</button>
-    <a href="/TrackSpending/TrackSpend/Index" class="btn btn-dark form-control">返 回</a>
+<hr />
+<div class="col-xl-12 col-md-12 col-sm-12" style="margin-bottom:1%; display:flex">
+    <div class="col-md-4">
+        <button id="CreateIcon" class="btn btn-info form-control">新 增 分 類</button>
+    </div>
+    <div class="col-md-4 ">
+        <button id="deleteclass" class="btn btn-danger form-control">刪 除</button>
+    </div>
+    <div class="col-md-4 ">
+        <a href="/TrackSpending/TrackSpend/Index" class="btn btn-dark form-control">返 回</a>
+    </div>
 </div>
+
 
 <!--CreateIcon Modal新增分類-->
 <div class="modal fade" id="CreateIconmodal" role="dialog" data-backdrop="static" data-keyboard="false">
@@ -94,4 +103,52 @@
         });
         $("#CreateIconmodal").modal("show");
     })
+    //#region delete
+    $(function () { 
+        let deleONOFF = true;
+
+        $("[id^=deleteclass_]").on("click", function () { 
+            let table = ($(this).parents().parents()[1].id);
+            let bool = confirm("是否確認刪除此分類？");
+            if (bool) {
+                $.post("@Url.Action("DeleteClassify","TrackSpend")", { ClassifyId: parseInt($(this)[0].id.split("_")[1]) }, function (e) {
+                    console.log(e);
+                    if (e.success) {
+                        Swal.fire({
+                            icon: "success",
+                            title: "成功",
+                            text: "刪除完成",
+                            showCloseButton: true,
+                            backdrop: true,
+                        });
+                        $("#" + table).load(location.href + " #" + table +">* ", "");
+                    }
+                    else{
+                        Swal.fire({
+                            icon: "error",
+                            title: "失敗",
+                            text: "刪除錯誤",
+                            showCloseButton: true,
+                            backdrop: true,
+                        })
+                    }
+                })
+            }
+            
+        })
+
+
+        $("#deleteclass").on("click", function () {
+            if (deleONOFF) {
+                $("[id^=deleteclass_]").css("display", "");
+                deleONOFF = false;
+            }
+            else{
+                $("[id^=deleteclass_]").css("display", "none");
+                deleONOFF = true;
+            }  
+        })
+
+    })
+    //#endregion
 </script>

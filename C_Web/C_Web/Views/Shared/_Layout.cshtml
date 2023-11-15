@@ -14,7 +14,6 @@
     <script src="~/source/lib/jquery-validation/dist/jquery.validate.min.js"></script>
     <!-- Bootstrap -->
     <link href="~/source/bootstrap-4.6.2-dist/css/bootstrap.min.css" rel="stylesheet" />
-    <link href="~/source/css/bootstrap-toggle.min.css" rel="stylesheet" />
     <link href="~/source/bootstrap-4.6.2-dist/css/bootstrap-grid.min.css" rel="stylesheet" />
     <link href="~/source/bootstrap-4.6.2-dist/css/bootstrap-reboot.min.css" rel="stylesheet" />
     <!-- bootstrap datetimepicker -->
@@ -37,16 +36,19 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.9.0/dist/sweetalert2.all.min.js"></script>
     <!-- FontAwesome -->
     <script src="https://kit.fontawesome.com/fa42898e94.js" crossorigin="anonymous"></script>
-    
+    <!--bootstrap-toggle-->
+    <link href="~/source/bootstrap-toggle-master/bootstrap-toggle-master/css/bootstrap-toggle.min.css" rel="stylesheet" />
+
     <link href="~/source/css/site.css" rel="stylesheet" />
     <link href="~/source/css/LoginBoxStyle.css" rel="stylesheet" />
     <link href="~/source/css/datatables.min.css" rel="stylesheet" />
+    <link href="~/source/css/leftmenu.css" rel="stylesheet" />
 </head>
 
 
 <body class="nav-md">
     <div style="display:flex; height: 93vh; width:100%;">
-        <div style="flex:none; width:12%;" class="leftmenulayout">
+        <div style="flex:none; width:12%;">
             @await Html.PartialAsync("_LeftMenu")
         </div>
         <div style="display: flex; width:3%;"></div>
@@ -59,9 +61,8 @@
     @await RenderSectionAsync("Scripts", required: false)
     <!-- Bootstrap -->
     <script src="~/source/bootstrap-4.6.2-dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/source/js/bootstrap2-toggle.min.js"></script>
     <script src="~/source/js/site.js"></script>
     <script src="~/source/DataTables/datatables.min.js"></script>
-
+    <script src="~/source/bootstrap-toggle-master/bootstrap-toggle-master/js/bootstrap-toggle.min.js"></script>
 </body>
 </html>

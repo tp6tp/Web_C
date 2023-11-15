@@ -23,7 +23,7 @@ namespace Web_TrackSpend_Services
         bool CreateClassifyInfo(ClassIconDTO DTO);
         bool CreateTrackSpendInfo(TrackSpendDTO DTO);
         bool EditTrackSpendInfo(TrackSpendDTO DTO);
-
+        bool DeleteClassifyInfo(int ClassifyId);
         List<List<List<string>>> Make3Array(List<TrackSpendDTO> Tracks);
     }
 }

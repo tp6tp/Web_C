@@ -77,6 +77,7 @@
     }
     //#region create
     $("#createClass").on("click", function () { 
+        let table = $(this).attr("data-type");
         if ($("#newclassifyName").val() == "" || $("#newclassifyName").val() == null) {
             error("名稱不得為空");
             return false;
@@ -107,7 +108,10 @@
             }).then((resjson) => {
                 if (resjson.success) {
                     $("#CreateIconmodal").modal("hide");
-                    $("#classicontable").load(location.href + " #classicontable>*", "");
+                    if(table == "支出")
+                        $("#expenses").load(location.href+" #expenses>*", "");
+                    else
+                            $("#income").load(location.href + " #income>*", "");
                     Swal.fire({
                         icon: "success",
                         title: "成功",

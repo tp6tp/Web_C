@@ -165,6 +165,19 @@ namespace Web_TrackSpend_Services
                 return false;
             }
         }
+        public bool DeleteClassifyInfo(int ClassifyId)
+        {
+            try
+            {
+                GEDB.Get($"DELETE FROM Classify_Info WHERE ClassifyId=@id;", new { id = ClassifyId });
+                db.SaveChanges();
+                return true;
+            }
+            catch(Exception e)
+            { 
+                return false; 
+            }
+        }
         public List<List<List<string>>> Make3Array(List<TrackSpendDTO> Tracks)
         {
             List<List<List<string>>> data = new();
