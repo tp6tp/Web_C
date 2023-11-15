@@ -153,7 +153,14 @@
                         if (resjson.success) {
                             $("#Createmodal").modal("hide"); 
                             // $("#trackstable").load(location.href + " #trackstable>*", "");
-                            $("#trackstable").load(location.href + "?nowdate=" + $("#nowdate").val() + " #trackstable>*", "");
+                            ch1($("#searchmonth").val());
+                            ch2($("#searchmonth").val());
+                            ch3($("#searchmonth").val());
+                            $("#trackstable").load(location.href + "?nowdate=" + $("#nowdate").val() + " #trackstable>*", "",
+                            function () {
+                                tracktotal();
+                                trackclick();
+                            });
                             Swal.fire({
                                 icon: "success",
                                 title: "成功",

@@ -37,18 +37,20 @@
     <!-- FontAwesome -->
     <script src="https://kit.fontawesome.com/fa42898e94.js" crossorigin="anonymous"></script>
     <!--bootstrap-toggle-->
-    <link href="~/source/bootstrap-toggle-master/bootstrap-toggle-master/css/bootstrap-toggle.min.css" rel="stylesheet" />
+    <link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
+    <script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
 
     <link href="~/source/css/site.css" rel="stylesheet" />
-    <link href="~/source/css/LoginBoxStyle.css" rel="stylesheet" />
     <link href="~/source/css/datatables.min.css" rel="stylesheet" />
-    <link href="~/source/css/leftmenu.css" rel="stylesheet" />
+    <link href="~/webcss/leftmenu.css" rel="stylesheet" />
+    <link href="~/webcss/LoginBoxStyle.css" rel="stylesheet" />
+    <link href="~/webcss/tabstyle.css" rel="stylesheet" />
 </head>
 
 
 <body class="nav-md">
-    <div style="display:flex; height: 93vh; width:100%;">
-        <div style="flex:none; width:12%;">
+    <div style="display:flex; height: 100vh; width:100%;">
+        <div style="flex:none; width:220px; height: auto" class="sidebar">
             @await Html.PartialAsync("_LeftMenu")
         </div>
         <div style="display: flex; width:3%;"></div>
@@ -63,6 +65,5 @@
     <script src="~/source/bootstrap-4.6.2-dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/source/js/site.js"></script>
     <script src="~/source/DataTables/datatables.min.js"></script>
-    <script src="~/source/bootstrap-toggle-master/bootstrap-toggle-master/js/bootstrap-toggle.min.js"></script>
 </body>
 </html>

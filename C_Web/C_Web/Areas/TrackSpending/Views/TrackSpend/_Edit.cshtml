@@ -37,9 +37,9 @@
             @foreach (var item in incomelsit)
             {
                 <div class="col-sm-2">
-                    @if (track.IconCode == item.IconCode)
+                    @if (track.ClassifyId == item.ClassifyId && track.IncomeOrExpenses == item.IncomeOrExpenses)
                     {
-                        <i style="display:flex; align-items:center; border:none; padding-left:27px; color: @item.TypeColorCode; border: solid"
+                        <i style="display:flex; align-items:center; border:none; padding-left:27px; color: @item.TypeColorCode; border: solid; border-color: black"
                            data-icon="@item.IconCode" data-Id="@item.ClassifyId"
                         class="@item.IconCode fa-2x form-control ICON"></i>
                     }
@@ -58,7 +58,7 @@
             @foreach (var item in expenseslist)
             {
                 <div class="col-sm-2">
-                    @if (track.IconCode == item.IconCode)
+                    @if (track.ClassifyId == item.ClassifyId && track.IncomeOrExpenses == item.IncomeOrExpenses)
                     {
                         <i style="display:flex; align-items:center; border:none; padding-left:27px; color: @item.TypeColorCode; border:solid; border-color: black"
                            data-icon="@item.IconCode" data-Id="@item.ClassifyId"
@@ -181,7 +181,14 @@
                 }).then((resjson) => {
                     if (resjson.success) {
                         $("#Editmodal").modal("hide");
-                        $("#trackstable").load(location.href+" #trackstable>*","");
+                        ch1($("#searchmonth").val());
+                        ch2($("#searchmonth").val());
+                        ch3($("#searchmonth").val());
+                        $("#trackstable").load(location.href + " #trackstable>*", "",
+                        function () {
+                            tracktotal();
+                            trackclick();
+                        });
                         Swal.fire({
                             icon: "success",
                             title: "成功",

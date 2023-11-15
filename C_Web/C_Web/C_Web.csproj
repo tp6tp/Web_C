@@ -8,6 +8,7 @@
     <Compile Remove="Areas\CustomerInfo\Data\**" />
     <Compile Remove="Areas\CustomerInfo\Models\**" />
     <Compile Remove="Areas\ProjectManage\**" />
+    <Compile Remove="Areas\TrackSpending\Views\TrackSpendBasic\**" />
     <Compile Remove="Areas\WebCAdmin\Data\**" />
     <Compile Remove="Areas\WebCAdmin\Models\**" />
     <Compile Remove="bin\**" />
@@ -15,6 +16,7 @@
     <Content Remove="Areas\CustomerInfo\Data\**" />
     <Content Remove="Areas\CustomerInfo\Models\**" />
     <Content Remove="Areas\ProjectManage\**" />
+    <Content Remove="Areas\TrackSpending\Views\TrackSpendBasic\**" />
     <Content Remove="Areas\WebCAdmin\Data\**" />
     <Content Remove="Areas\WebCAdmin\Models\**" />
     <Content Remove="bin\**" />
@@ -22,6 +24,7 @@
     <EmbeddedResource Remove="Areas\CustomerInfo\Data\**" />
     <EmbeddedResource Remove="Areas\CustomerInfo\Models\**" />
     <EmbeddedResource Remove="Areas\ProjectManage\**" />
+    <EmbeddedResource Remove="Areas\TrackSpending\Views\TrackSpendBasic\**" />
     <EmbeddedResource Remove="Areas\WebCAdmin\Data\**" />
     <EmbeddedResource Remove="Areas\WebCAdmin\Models\**" />
     <EmbeddedResource Remove="bin\**" />
@@ -29,6 +32,7 @@
     <None Remove="Areas\CustomerInfo\Data\**" />
     <None Remove="Areas\CustomerInfo\Models\**" />
     <None Remove="Areas\ProjectManage\**" />
+    <None Remove="Areas\TrackSpending\Views\TrackSpendBasic\**" />
     <None Remove="Areas\WebCAdmin\Data\**" />
     <None Remove="Areas\WebCAdmin\Models\**" />
     <None Remove="bin\**" />
@@ -36,6 +40,7 @@
     <TypeScriptCompile Remove="Areas\CustomerInfo\Data\**" />
     <TypeScriptCompile Remove="Areas\CustomerInfo\Models\**" />
     <TypeScriptCompile Remove="Areas\ProjectManage\**" />
+    <TypeScriptCompile Remove="Areas\TrackSpending\Views\TrackSpendBasic\**" />
     <TypeScriptCompile Remove="Areas\WebCAdmin\Data\**" />
     <TypeScriptCompile Remove="Areas\WebCAdmin\Models\**" />
     <TypeScriptCompile Remove="wwwroot\source\sweetalert2-sweetalert2-1c04cda\**" />
@@ -600,9 +605,5 @@
     <None Include="wwwroot\source\select2\tests\vendor\jquery-1.7.2.js" />
     <None Include="wwwroot\source\select2\tests\vendor\qunit-1.23.1.js" />
     <None Include="wwwroot\source\select2\vendor\jquery-2.1.0.js" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Areas\TrackSpending\Views\TrackSpendBasic\" />
   </ItemGroup>
 </Project>

@@ -79,7 +79,7 @@
                                         <font class="" style="font-size:larger; font-weight:bold; ">@strList[2]</font>
                                     </div>
                                     @{
-                                        strList[3] = strList[4] == "支出" ? "-" + strList[3] : " "+strList[3];
+                                        strList[3] = strList[4] == "支出" && Convert.ToInt32(strList[3]) != 0 ? "-" + strList[3] : " "+strList[3];
                                     }
                                     <div style="display: flex; align-items: center; margin-right: 3%">
                                         <span style="white-space:nowrap; "><i class="fas fa-coins fa-lg" style="margin-right: 10%"></i><font class="amount" style="font-size:medium; font-weight:bold;">@strList[3]</font></span>
