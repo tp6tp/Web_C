@@ -107,23 +107,35 @@ namespace C_Web.Areas.TrackSpending.Controllers
             return Json(new { Success = false });
         }
         [HttpPost]
-        public IActionResult ViewChart1(string SDate, string EDate)
+        public IActionResult ViewChart1(string? nowdate)
         {
+            if (nowdate == null)
+                nowdate = DateTime.Now.Month.ToString();
+            else
+                nowdate = nowdate.Split("-")[1];
             long UserId = HttpContext.Session.GetObject<UserSessionDTO>("User").UserId;
-            object[] result = _ITrackSpend_Services.GetChart1(SDate, EDate, UserId);
+            object[] result = _ITrackSpend_Services.GetChart1(nowdate, UserId);
             return Json(new { income = result[0], expenses = result[1] });
         }
         [HttpPost]
-        public IActionResult ViewChart2(string SDate, string EDate)
+        public IActionResult ViewChart2(string? nowdate)
         {
+            if (nowdate == null)
+                nowdate = DateTime.Now.Month.ToString();
+            else
+                nowdate = nowdate.Split("-")[1];
             long UserId = HttpContext.Session.GetObject<UserSessionDTO>("User").UserId;
-            object[] result = _ITrackSpend_Services.GetChat2(SDate, EDate, UserId);
+            object[] result = _ITrackSpend_Services.GetChat2(nowdate, UserId);
             return Json(new { amount = result[0], note = result[1], color = result[2] });
         }
-        public IActionResult ViewChart3(string SDate, string EDate)
+        public IActionResult ViewChart3(string? nowdate)
         {
+            if (nowdate == null)
+                nowdate = DateTime.Now.Month.ToString();
+            else
+                nowdate = nowdate.Split("-")[1];
             long UserId = HttpContext.Session.GetObject<UserSessionDTO>("User").UserId;
-            object[] result = _ITrackSpend_Services.GetChart3(SDate, EDate, UserId);
+            object[] result = _ITrackSpend_Services.GetChart3(nowdate, UserId);
             return Json(new { date = result[0], expenses = result[1], income = result[2], cashsurplus = result[3] });
         }
     }

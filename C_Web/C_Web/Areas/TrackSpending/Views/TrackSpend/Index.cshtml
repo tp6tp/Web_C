@@ -120,8 +120,14 @@
     });
     $(function () {
         $("#searchmonth").on("change", function (e) {
-            console.log($("#searchmonth").val());
-            $("#trackstable").load("/TrackSpending/TrackSpend?nowdate=" + $("#searchmonth").val() + " #trackstable>*", "");
+            // console.log($("#searchmonth").val()); 
+            ch1($("#searchmonth").val());
+            ch2($("#searchmonth").val());
+            ch3($("#searchmonth").val());
+            $("#trackstable").load("/TrackSpending/TrackSpend?nowdate=" + $("#searchmonth").val() + " #trackstable>*", "", 
+            function () {
+                tracktotal();
+            });
         })
     })
 
@@ -139,29 +145,38 @@
 
     //#region 收入支出 結算
     $(function () {
+        tracktotal();
+    })
+    function tracktotal() {
         let IN = 0;
         let EX = 0;
         let str = $(".amount");
         str.each(function (e) {
-            // console.log(parseInt(str[e].innerHTML));
+            console.log(parseInt(str[e].innerHTML));
             let num = parseInt(str[e].innerHTML);
-            if(num >= 0)
+            if (num >= 0)
                 IN += num;
             else
                 EX += num;
         })
         $("#totalexpenses").text("支出: " + EX);
         $("#totalincome").text("收入: " + IN);
-    })
+    }
     //#endregion
 
     //#region chart
     $(function(){
-
-        //#region chart1
-        $.post("@Url.Action("ViewChart1","TrackSpend")", {}, function (e) {
-           // console.log([e.expenses[0], e.income[0]]);
-
+        ch1();
+        ch2();
+        ch3();
+    })
+    //#region chart1
+    function ch1(date) {
+        $.post("@Url.Action("ViewChart1","TrackSpend")", { nowdate: date }, function (e) {
+            // console.log([e.expenses[0], e.income[0]]);
+            let preChart1 = Chart.getChart("spendChart1");
+            if (preChart1)
+                preChart1.destroy();
             var ctx = document.getElementById("spendChart1").getContext('2d');
             var spendChart = new Chart(ctx, {
                 type: "doughnut",
@@ -188,14 +203,19 @@
                     }
                 }
             })
-        })    
-        //#endregion
+        })
+    }
+    //#endregion
 
-        //#region chart2
-        $.post("@Url.Action("ViewChart2","TrackSpend")", {}, function (e) {
+    //#region chart2
+    function ch2(date) {
+        $.post("@Url.Action("ViewChart2","TrackSpend")", { nowdate: date }, function (e) {
             // console.log(e.amount);
             // console.log(e.note);
             // console.log(e.color);
+            let preChart2 = Chart.getChart("spendChart2");
+            if (preChart2)
+                preChart2.destroy();
             var ct = document.getElementById("spendChart2").getContext('2d');
             var spendChart2 = new Chart(ct, {
                 type: "doughnut",
@@ -220,14 +240,19 @@
                 }
             })
         })
-        //#endregion
+    }
+    //#endregion
 
-        //#region chart3
-        $.post("@Url.Action("ViewChart3","TrackSpend")", {}, function (e) {
+    //#region chart3
+    function ch3(date) {
+        $.post("@Url.Action("ViewChart3","TrackSpend")", { nowdate: date }, function (e) {
             // console.log(e.date);
             // console.log(e.expenses);
             // console.log(e.income);
             // console.log(e.cashsurplus);
+            let preChart3 = Chart.getChart("spendChart3");
+            if (preChart3)
+                preChart3.destroy();
             var ct = document.getElementById("spendChart3").getContext('2d');
             var spendChart2 = new Chart(ct, {
                 type: "bar",
@@ -235,14 +260,14 @@
                     labels: e.date,
                     datasets: [{
                         label: "收入: ",
-                        data:e.income,
+                        data: e.income,
                         backgroundColor: "#12ADCB",
                         borderColor: "#12ADCB",
                         showLine: true
                     },
                     {
                         label: "支出: ",
-                        data:e.expenses,
+                        data: e.expenses,
                         backgroundColor: "#F0B524",
                         borderColor: "#F0B524",
                         showLine: true
@@ -269,15 +294,17 @@
                 }
             })
         })
-        //#endregion
-    })
+    }
+    //#endregion
 
     //#endregion
 
+    //#region edit
     $("[id^=track_]").on("click", function () { 
         let ID = $(this)[0].id.split("_")[1];
          // console.log(ID);
         $("#Editmodal .modal-content").load("@Url.Action("EditModal","TrackSpend")", {TrackSpendId: ID});
         $("#Editmodal").modal("show");  
     })
+    //#endregion
 </script>

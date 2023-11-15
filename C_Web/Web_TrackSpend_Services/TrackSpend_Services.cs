@@ -173,7 +173,7 @@ namespace Web_TrackSpend_Services
                 db.SaveChanges();
                 return true;
             }
-            catch(Exception e)
+            catch(Exception)
             { 
                 return false; 
             }
@@ -205,7 +205,7 @@ namespace Web_TrackSpend_Services
             return data;
         }
 
-        public object[] GetChart1(string SDate, string EDate, long UserId)
+        public object[] GetChart1(string nowdate, long UserId)
         {
             object[] result = new object[2];
             try
@@ -214,12 +214,13 @@ namespace Web_TrackSpend_Services
                                         " SUM( CASE WHEN IncomeOrExpenses = 0 THEN TotalAmount ELSE 0 END) as expenses," +
                                         " SUM( CASE WHEN IncomeOrExpenses = 1 THEN TotalAmount ELSE 0 END) as income" +
                                     " FROM TrackSpend_Info WHERE UserId=@id";
-                Sql += string.IsNullOrEmpty(SDate) ? "" : string.IsNullOrEmpty(EDate) ?
-                    $" AND CONVERT(DATE, NowDate, 111) >= CONVERT(DATE, @sdate, 111)" :
-                    $" AND CONVERT(DATE, NowDate, 111) BETWEEN CONVERT(DATE, @sdate, 111) AND CONVERT(DATE, @edate, 111)";
-                Sql += string.IsNullOrEmpty(EDate) ? "" : string.IsNullOrEmpty(SDate) ?
-                    $" AND CONVERT(DATE, NowDate, 111) <= CONVERT(DATE, @edate, 111)" : "";
-                IQueryable<TrackSpendDTO> chart1 = GEDB.GetAlls<TrackSpendDTO>(Sql, new { sdate = SDate, edate = EDate, id = UserId });
+                Sql += string.IsNullOrEmpty(nowdate) ? "" : $" AND DATEPART(MONTH, NowDate) = @date;";
+                //Sql += string.IsNullOrEmpty(SDate) ? "" : string.IsNullOrEmpty(EDate) ?
+                //    $" AND CONVERT(DATE, NowDate, 111) >= CONVERT(DATE, @sdate, 111)" :
+                //    $" AND CONVERT(DATE, NowDate, 111) BETWEEN CONVERT(DATE, @sdate, 111) AND CONVERT(DATE, @edate, 111)";
+                //Sql += string.IsNullOrEmpty(EDate) ? "" : string.IsNullOrEmpty(SDate) ?
+                //    $" AND CONVERT(DATE, NowDate, 111) <= CONVERT(DATE, @edate, 111)" : "";
+                IQueryable<TrackSpendDTO> chart1 = GEDB.GetAlls<TrackSpendDTO>(Sql, new { date = nowdate, id = UserId });
 
                 result[0] = chart1.Select(x => x.income);
                 result[1] = chart1.Select(x => x.expenses);
@@ -232,7 +233,7 @@ namespace Web_TrackSpend_Services
                 return result;
             }
         }
-        public object[] GetChat2(string SDate, string EDate, long UserId)
+        public object[] GetChat2(string nowdate, long UserId)
         {
             object[] result = new object[3];
             try
@@ -243,13 +244,14 @@ namespace Web_TrackSpend_Services
                             $" LEFT JOIN Icon_Info ICON on CLASS.ClassifyIconId = ICON.IconId" +
                             $" LEFT JOIN IconType_Info ITYPE on CLASS.ClassifyTypeId = ITYPE.Icon_TypeId" +
                             $" WHERE TS.UserId=@id";
-                Sql += string.IsNullOrEmpty(SDate) ? "" : string.IsNullOrEmpty(EDate) ?
-                   $" AND CONVERT(DATE, TS.NowDate, 111) >= CONVERT(DATE, @sdate, 111)" :
-                   $" AND CONVERT(DATE, TS.NowDate, 111) BETWEEN CONVERT(DATE, @sdate, 111) AND CONVERT(DATE, @edate, 111)";
-                Sql += string.IsNullOrEmpty(EDate) ? "" : string.IsNullOrEmpty(SDate) ?
-                    $" AND CONVERT(DATE, TS.NowDate, 111) <= CONVERT(DATE, @edate, 111)" : "";
+                Sql += string.IsNullOrEmpty(nowdate) ? "" : $" AND DATEPART(MONTH, TS.NowDate) = @date";
+                //Sql += string.IsNullOrEmpty(SDate) ? "" : string.IsNullOrEmpty(EDate) ?
+                //   $" AND CONVERT(DATE, TS.NowDate, 111) >= CONVERT(DATE, @sdate, 111)" :
+                //   $" AND CONVERT(DATE, TS.NowDate, 111) BETWEEN CONVERT(DATE, @sdate, 111) AND CONVERT(DATE, @edate, 111)";
+                //Sql += string.IsNullOrEmpty(EDate) ? "" : string.IsNullOrEmpty(SDate) ?
+                //    $" AND CONVERT(DATE, TS.NowDate, 111) <= CONVERT(DATE, @edate, 111)" : "";
                 Sql += $" GROUP BY TS.ClassifyId, ICON.IconCode, ITYPE.TypeColorCode, TS.Note";
-                IQueryable<TrackSpendDTO> chart2 = GEDB.GetAlls<TrackSpendDTO>(Sql, new { id = UserId, sdate = SDate, edate = EDate });
+                IQueryable<TrackSpendDTO> chart2 = GEDB.GetAlls<TrackSpendDTO>(Sql, new { id = UserId, date=nowdate });
                 result[0] = chart2.Select(x => x.TotalAmount);
                 result[1] = chart2.Select(x => x.Note.Trim());
                 result[2] = chart2.Select(x => x.TypeColorCode);
@@ -263,7 +265,7 @@ namespace Web_TrackSpend_Services
                 return result;
             }
         }
-        public object[] GetChart3(string SDate, string EDate, long UserId)
+        public object[] GetChart3(string nowdate, long UserId)
         {
             object[] result = new object[4];
             try
@@ -272,13 +274,14 @@ namespace Web_TrackSpend_Services
                                     $"SUM( CASE WHEN IncomeOrExpenses = 0 THEN TotalAmount ELSE 0 END) as expenses, " +
                                     $"SUM( CASE WHEN IncomeOrExpenses = 1 THEN TotalAmount ELSE 0 END) as income " +
                                     $"FROM TrackSpend_Info WHERE UserId=@id";
-                Sql += string.IsNullOrEmpty(SDate) ? "" : string.IsNullOrEmpty(EDate) ?
-                   $" AND CONVERT(DATE, NowDate, 111) >= CONVERT(DATE, @sdate, 111)" :
-                   $" AND CONVERT(DATE, NowDate, 111) BETWEEN CONVERT(DATE, @sdate, 111) AND CONVERT(DATE, @edate, 111)";
-                Sql += string.IsNullOrEmpty(EDate) ? "" : string.IsNullOrEmpty(SDate) ?
-                    $" AND CONVERT(DATE, NowDate, 111) <= CONVERT(DATE, @edate, 111)" : "";
+                Sql += string.IsNullOrEmpty(nowdate) ? "" : $" AND DATEPART(MONTH, NowDate) = @date";
+                //Sql += string.IsNullOrEmpty(SDate) ? "" : string.IsNullOrEmpty(EDate) ?
+                //   $" AND CONVERT(DATE, NowDate, 111) >= CONVERT(DATE, @sdate, 111)" :
+                //   $" AND CONVERT(DATE, NowDate, 111) BETWEEN CONVERT(DATE, @sdate, 111) AND CONVERT(DATE, @edate, 111)";
+                //Sql += string.IsNullOrEmpty(EDate) ? "" : string.IsNullOrEmpty(SDate) ?
+                //    $" AND CONVERT(DATE, NowDate, 111) <= CONVERT(DATE, @edate, 111)" : "";
                 Sql += $" GROUP BY Month, Years";
-                IQueryable<TrackSpendDTO> chart3 = GEDB.GetAlls<TrackSpendDTO>(Sql, new { id = UserId, sdate = SDate, edate = EDate });
+                IQueryable<TrackSpendDTO> chart3 = GEDB.GetAlls<TrackSpendDTO>(Sql, new { id = UserId, date=nowdate });
                 result[0] = chart3.Select(x => x.Years + "年" + x.Month + "月");
                 result[1] = chart3.Select(x => x.expenses);
                 result[2] = chart3.Select(x => x.income);

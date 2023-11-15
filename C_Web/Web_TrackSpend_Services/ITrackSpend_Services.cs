@@ -16,9 +16,9 @@ namespace Web_TrackSpend_Services
         List<ClassifyDTO> GetClassifyInfoList(long UserId);
         List<TrackSpendDTO> GetTracks(long UserId, string nowdate);
         TrackSpendDTO GetEditTrack(string TrackSpendId);
-        object[] GetChart1(string SDate, string EDate, long UserId);
-        object[] GetChat2(string SDate, string EDate, long UserId);
-        object[] GetChart3(string SDate, string EDate, long UserId);
+        object[] GetChart1(string nowdate, long UserId);
+        object[] GetChat2(string nowdate, long UserId);
+        object[] GetChart3(string nowdate, long UserId);
 
         bool CreateClassifyInfo(ClassIconDTO DTO);
         bool CreateTrackSpendInfo(TrackSpendDTO DTO);
