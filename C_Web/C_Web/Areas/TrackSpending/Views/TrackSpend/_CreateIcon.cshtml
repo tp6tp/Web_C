@@ -108,10 +108,11 @@
             }).then((resjson) => {
                 if (resjson.success) {
                     $("#CreateIconmodal").modal("hide");
-                    if(table == "支出")
-                        $("#expenses").load(location.href+" #expenses>*", "");
-                    else
-                            $("#income").load(location.href + " #income>*", "");
+                    location.reload();
+                    // if(table == "支出")
+                    //     $("#expenses").load(location.href+" #expenses>*", "");
+                    // else
+                    //         $("#income").load(location.href + " #income>*", "");
                     Swal.fire({
                         icon: "success",
                         title: "成功",

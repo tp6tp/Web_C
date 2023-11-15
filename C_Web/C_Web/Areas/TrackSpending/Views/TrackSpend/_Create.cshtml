@@ -151,8 +151,9 @@
                         return res.json();
                     }).then((resjson) => {
                         if (resjson.success) {
-                            $("#Createmodal").modal("hide");
-                            $("#trackstable").load(location.href + " #trackstable>*", "");
+                            $("#Createmodal").modal("hide"); 
+                            // $("#trackstable").load(location.href + " #trackstable>*", "");
+                            $("#trackstable").load(location.href + "?nowdate=" + $("#nowdate").val() + " #trackstable>*", "");
                             Swal.fire({
                                 icon: "success",
                                 title: "成功",
